@@ -1,6 +1,7 @@
 package com.brycecampbell.bcheckbook
 
 import android.os.Bundle
+import android.os.Environment
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -15,6 +16,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.brycecampbell.bcheckbook.ui.theme.BCheckbookTheme
 import me.brycecampbell.bcheck.*
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.Paths
 
 
 class MainActivity : ComponentActivity() {
@@ -24,6 +28,15 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val rootDirectory = this.getExternalFilesDir(null)?.absolutePath
+        val applicationFolder = "$rootDirectory/BCheckbook"
+
+        if (File(applicationFolder).isDirectory) {
+            Files.createDirectory(Paths.get(applicationFolder))
+        }
+
+
         setContent {
             val navController = rememberNavController()
             recordStore = remember { mutableStateListOf() }
