@@ -14,6 +14,8 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,10 +41,28 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                 Icon(Icons.Filled.Add, "")
             }
 
-            IconButton(onClick = {
+            val optionsExpanded = remember { mutableStateOf(false) }
 
+            IconButton(onClick = {
+                optionsExpanded.value = !optionsExpanded.value
             }) {
                 Icon(Icons.Filled.MoreVert, "")
+            }
+
+            DropdownMenu(optionsExpanded.value, onDismissRequest = {
+                optionsExpanded.value = false
+            }) {
+                DropdownMenuItem(onClick = {
+                    optionsExpanded.value = false
+                }) {
+                    Text("Import Transactions")
+                }
+
+                DropdownMenuItem(onClick = {
+                    optionsExpanded.value = false
+                }) {
+                    Text("Export Transactions")
+                }
             }
         })
 
