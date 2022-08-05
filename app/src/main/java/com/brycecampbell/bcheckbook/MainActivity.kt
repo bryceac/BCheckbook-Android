@@ -29,13 +29,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val rootDirectory = this.getExternalFilesDir(null)?.absolutePath
-        val applicationFolder = "$rootDirectory/BCheckbook"
-
-        if (File(applicationFolder).isDirectory) {
-            Files.createDirectory(Paths.get(applicationFolder))
-        }
-
 
         setContent {
             val navController = rememberNavController()
