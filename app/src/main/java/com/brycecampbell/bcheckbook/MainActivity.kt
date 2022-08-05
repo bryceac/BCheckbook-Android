@@ -16,9 +16,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.brycecampbell.bcheckbook.ui.theme.BCheckbookTheme
 import me.brycecampbell.bcheck.*
-import java.io.File
-import java.nio.file.Files
-import java.nio.file.Paths
 
 
 class MainActivity : ComponentActivity() {
