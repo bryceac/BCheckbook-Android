@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import me.brycecampbell.bcheck.Record
+import me.brycecampbell.bcheck.TransactionType
 import java.io.File
 import java.io.FileOutputStream
 
@@ -62,19 +63,139 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
         return super.getReadableDatabase()
     }
 
-    fun databaseContainsRecord(record: Record): Boolean {
-        val db = super.getReadableDatabase()
+    private fun databaseContainsRecord(record: Record): Boolean {
+        val db = this.readableDatabase
         val id = record.id.uppercase()
 
-        val cursor = db.rawQuery("SELECT id FROM ledger WHERE = id", null)
-        return cursor.count == 1
+        val cursor = db.rawQuery("SELECT id FROM ledger WHERE id = $id", null)
+        val recordExists = cursor.count == 1
+        cursor.close()
+        db.close()
+        return recordExists
     }
 
-    fun databaseContainsCategory(category: String): Boolean {
-        val db = super.getReadableDatabase()
+    private fun databaseContainsCategory(category: String): Boolean {
+        val db = this.readableDatabase
 
-        val cursor = db.rawQuery("SELECT id FROM ledger WHERE = id", null)
-        return cursor.count == 1
+        val cursor = db.rawQuery("SELECT category FROM categories WHERE category = $category", null)
+        val categoryExists = cursor.count == 1
+        cursor.close()
+        db.close()
+        return categoryExists
+    }
+
+    private fun idOfCategory(category: String): Int {
+        val db = this.readableDatabase
+
+        val cursor = db.rawQuery("SELECT id FROM categories WHERE category = $category", null)
+        val id = cursor.getInt(0)
+        cursor.close()
+        db.close()
+        return id
+    }
+
+    private fun addCategory(category: String) {
+        if (!databaseContainsCategory(category)) {
+            val db = this.writableDatabase
+            val insertQuery = "Insert Into categories (category) VALUES ($category)"
+            db.execSQL(insertQuery)
+            db.close()
+        }
+    }
+
+    fun addRecord(record: Record) {
+        if (!databaseContainsRecord(record)) {
+            val db = this.writableDatabase
+            val id = record.id.uppercase()
+            val date = record.transaction.date.toString()
+            val checkNumber = record.transaction.checkNumber
+            val category: Int? = record.transaction.category?.let { recordCategory ->
+                val categoryID = if (databaseContainsCategory(recordCategory)) {
+                    idOfCategory(recordCategory)
+                } else {
+                    addCategory(recordCategory)
+
+                    idOfCategory(recordCategory)
+                }
+
+                categoryID
+            }
+
+            val vendor = record.transaction.vendor
+            val memo = record.transaction.memo
+            val amount = if (record.transaction.type == TransactionType.Withdrawal) {
+                record.transaction.amount*-1
+            } else {
+                record.transaction.amount
+            }
+            val reconciled = if (record.transaction.isReconciled) {
+                1
+            } else {
+                0
+            }
+
+            val insertQuery = "Insert INTO trades VALUES ($id, $date, ${checkNumber.toString().uppercase()}, $vendor, $memo, $amount, ${category.toString().uppercase()}, $reconciled)"
+            db.execSQL(insertQuery)
+            db.close()
+        } else {
+            updateRecord(record)
+        }
+    }
+
+    fun updateRecord(record: Record) {
+        if (!databaseContainsRecord(record)) {
+            val db = this.writableDatabase
+            val id = record.id.uppercase()
+            val date = record.transaction.date.toString()
+            val checkNumber = record.transaction.checkNumber
+            val category: Int? = record.transaction.category?.let { recordCategory ->
+                val categoryID = if (databaseContainsCategory(recordCategory)) {
+                    idOfCategory(recordCategory)
+                } else {
+                    addCategory(recordCategory)
+
+                    idOfCategory(recordCategory)
+                }
+
+                categoryID
+            }
+
+            val vendor = record.transaction.vendor
+            val memo = record.transaction.memo
+            val amount = if (record.transaction.type == TransactionType.Withdrawal) {
+                record.transaction.amount*-1
+            } else {
+                record.transaction.amount
+            }
+            val reconciled = if (record.transaction.isReconciled) {
+                1
+            } else {
+                0
+            }
+
+            val updateQuery = "Update trades SET date = $date, check_number = ${checkNumber.toString().uppercase()}, vendor = $vendor, memo = $memo, amount = $amount, category = $category, reconciled = $reconciled WHERE id = $id"
+            db.execSQL(updateQuery)
+            db.close()
+        }
+    }
+
+    fun addRecords(records: MutableList<Record>) {
+        for (record in records) {
+            addRecord(record)
+        }
+    }
+
+    fun balanceForRecord(record: Record): Double {
+        return if (databaseContainsRecord(record)) {
+            val db = this.readableDatabase
+            val cursor = db.rawQuery("SELECT balance FROM ledger WHERE id = ${record.id.uppercase()}", null)
+            val balance = cursor.getDouble(0)
+            cursor.close()
+            db.close()
+            balance
+        } else {
+            0.0
+        }
     }
 
     companion object {
