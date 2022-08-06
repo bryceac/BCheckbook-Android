@@ -102,7 +102,7 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
     private fun idOfCategory(category: String): Int {
         val db = this.readableDatabase
 
-        val cursor = db.rawQuery("SELECT id FROM categories WHERE category = $category", null)
+        val cursor = db.rawQuery("SELECT id FROM categories WHERE category = \"$category\"", null)
         cursor.moveToFirst()
         val id = cursor.getInt(0)
         cursor.close()
@@ -168,7 +168,7 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
     }
 
     fun updateRecord(record: Record) {
-        if (!databaseContainsRecord(record)) {
+        if (databaseContainsRecord(record)) {
             val db = this.writableDatabase
             val id = record.id.uppercase()
             val date = record.transaction.date.toString()
