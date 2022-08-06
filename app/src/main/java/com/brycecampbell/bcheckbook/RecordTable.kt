@@ -78,6 +78,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                     confirmStateChange = { dismissValue ->
                         if (dismissValue == DismissValue.DismissedToStart) {
                             records.remove(record)
+                            manager?.removeRecord(record)
                         }
                         true
                     }
