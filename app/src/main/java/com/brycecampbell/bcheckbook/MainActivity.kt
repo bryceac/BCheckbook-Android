@@ -30,14 +30,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val manager = DBHelper(this)
+
         setContent {
             val navController = rememberNavController()
             recordStore = remember { mutableStateListOf() }
-            categoryStore = remember { mutableStateListOf(
-                "Hello",
-                "World",
-                "7"
-            ) }
+            recordStore.addAll(manager.records)
+            categoryStore = remember { mutableStateListOf() }
+            categoryStore.addAll(manager.categories)
+
             BCheckbookTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
