@@ -77,36 +77,33 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
     }
 
     private fun databaseContainsRecord(record: Record): Boolean {
-        val db = this.readableDatabase
+        val db = this.writableDatabase
         val id = record.id.uppercase()
 
         val cursor = db.rawQuery("SELECT id FROM ledger WHERE id = \"$id\"", null)
         cursor.moveToFirst()
         val recordExists = cursor.count == 1
         cursor.close()
-        db.close()
         return recordExists
     }
 
     private fun databaseContainsCategory(category: String): Boolean {
-        val db = this.readableDatabase
+        val db = this.writableDatabase
 
         val cursor = db.rawQuery("SELECT category FROM categories WHERE category = \"$category\"", null)
         cursor.moveToFirst()
         val categoryExists = cursor.count == 1
         cursor.close()
-        db.close()
         return categoryExists
     }
 
     private fun idOfCategory(category: String): Int {
-        val db = this.readableDatabase
+        val db = this.writableDatabase
 
         val cursor = db.rawQuery("SELECT id FROM categories WHERE category = \"$category\"", null)
         cursor.moveToFirst()
         val id = cursor.getInt(0)
         cursor.close()
-        db.close()
         return id
     }
 
