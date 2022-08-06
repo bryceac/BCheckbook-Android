@@ -68,6 +68,7 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
         val id = record.id.uppercase()
 
         val cursor = db.rawQuery("SELECT id FROM ledger WHERE id = $id", null)
+        cursor.moveToFirst()
         val recordExists = cursor.count == 1
         cursor.close()
         db.close()
@@ -88,6 +89,7 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
         val db = this.readableDatabase
 
         val cursor = db.rawQuery("SELECT id FROM categories WHERE category = $category", null)
+        cursor.moveToFirst()
         val id = cursor.getInt(0)
         cursor.close()
         db.close()
@@ -198,10 +200,38 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
         }
     }
 
+    fun retrieveRecords() {
+        val db = this.readableDatabase
+        var records = mutableListOf<>()
+        val cursor = db.rawQuery("SELECT id, date, check_number, reconciled, vendor, memo, category, amount", null)
+
+        try {
+            while (cursor.moveToNext()) {
+                val id = cursor.getString(0)
+                val date = cursor.getString(1)
+                val check_number: Int? = cursor.getString(2).toIntOrNull()
+                val reconciled = cursor.getInt(3)
+                val vendor = cursor.getString(4)
+                val memo = cursor.getString(5)
+                val category = if (cursor.getString(6).equals(null.toString(), ignoreCase = true)) {
+                    null
+                } else {
+                    cursor.getString(6)
+                }
+                val amount = cursor.getDouble(7)
+            }
+        } finally {
+            cursor.close()
+        }
+
+        db.close()
+    }
+
     fun balanceForRecord(record: Record): Double {
         return if (databaseContainsRecord(record)) {
             val db = this.readableDatabase
             val cursor = db.rawQuery("SELECT balance FROM ledger WHERE id = ${record.id.uppercase()}", null)
+            cursor.moveToFirst()
             val balance = cursor.getDouble(0)
             cursor.close()
             db.close()
