@@ -138,7 +138,7 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
 
             val vendor = record.transaction.vendor
             val memo = record.transaction.memo
-            val amount = if (record.transaction.type == TransactionType.Withdrawal) {
+            val amount = if (record.transaction.type == TransactionType.Withdrawal && record.transaction.amount > 0) {
                 record.transaction.amount*-1
             } else {
                 record.transaction.amount
@@ -222,11 +222,15 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
             while (cursor.moveToNext()) {
                 val id = cursor.getString(0)
                 val date = cursor.getString(1)
-                val checkNumber: Int? = cursor.getString(2).toIntOrNull()
+                val checkNumber: Int? = if (cursor.isNull(2)) {
+                    null
+                } else {
+                    cursor.getInt(2)
+                }
                 val reconciled = cursor.getString(3) != "N"
                 val vendor = cursor.getString(4)
                 val memo = cursor.getString(5)
-                val category = if (cursor.getString(6).equals(null.toString(), ignoreCase = true)) {
+                val category = if (cursor.isNull(6)) {
                     null
                 } else {
                     cursor.getString(6)
