@@ -68,7 +68,9 @@ fun RecordView(record: Record, manager: DBHelper? = null, tapAction: () -> Unit)
                 }
             }
 
-            Text(currencyFormatter.format(0), modifier = Modifier.wrapContentWidth().fillMaxWidth(maxWidth))
+            Text(currencyFormatter.format(manager?.balanceForRecord(record).let { value ->
+                value ?: 0.0
+            }), modifier = Modifier.wrapContentWidth().fillMaxWidth(maxWidth))
 
             if (record.transaction.category != null) {
                 Text(record.transaction.category.toString(), modifier = Modifier.wrapContentWidth().align(Alignment.Start).fillMaxWidth(maxWidth))
