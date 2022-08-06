@@ -36,7 +36,9 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
             Text("Ledger")
         }, actions = {
             IconButton(onClick = {
-                records.add(Record())
+                val record = Record()
+                records.add(record)
+                manager?.addRecord(record)
             }) {
                 Icon(Icons.Filled.Add, "")
             }
@@ -96,10 +98,6 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                             }
                         )
 
-                        val scale by animateFloatAsState(
-                            if (dismissState.targetValue == DismissValue.Default) 0.75F else 1F
-                        )
-
                         Box(Modifier.fillMaxSize()
                             .background(color)
                             .padding(horizontal = Dp(20F)),
@@ -110,7 +108,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                         }
                     }
                 ) {
-                    RecordView(record) {
+                    RecordView(record, manager) {
                         navController?.navigate("recordDetail/$index")
                     }
                 }

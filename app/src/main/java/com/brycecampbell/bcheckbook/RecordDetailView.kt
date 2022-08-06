@@ -142,6 +142,8 @@ fun RecordDetailView(navController: NavHostController? = null, records: MutableL
                 if (newReconciledStatus != recordState.value.transaction.isReconciled) {
                     recordState.value.transaction.isReconciled = newReconciledStatus
                 }
+
+                manager?.updateRecord(recordState.value)
             }) {
                 Text("Submit", modifier = Modifier.fillMaxWidth().wrapContentWidth())
             }
