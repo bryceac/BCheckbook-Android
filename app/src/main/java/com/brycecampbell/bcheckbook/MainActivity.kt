@@ -35,7 +35,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             recordStore = remember { mutableStateListOf() }
-            recordStore.addAll(manager.records)
             categoryStore = remember { mutableStateListOf() }
             categoryStore.addAll(manager.categories)
 
