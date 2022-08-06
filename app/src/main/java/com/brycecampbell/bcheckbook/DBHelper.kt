@@ -3,6 +3,7 @@ package com.brycecampbell.bcheckbook
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import me.brycecampbell.bcheck.Record
 import java.io.File
 import java.io.FileOutputStream
 
@@ -18,7 +19,7 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {}
 
-    private fun dataFromAssets() {
+    private fun copyDatabaseFromAssets() {
         val inputStream = context.assets.open("$DATABASE_NAME.db")
 
         try {
@@ -40,6 +41,40 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
             putInt(DATABASE_NAME, VERSION)
             apply()
         }
+    }
+
+    @Synchronized
+    private fun installOrUpdateIfNeeded() {
+        if (databaseIsOutdated) {
+            context.deleteDatabase(DATABASE_NAME)
+            copyDatabaseFromAssets()
+            writeDatabaseVersionInPreferences()
+        }
+    }
+
+    override fun getWritableDatabase(): SQLiteDatabase {
+        installOrUpdateIfNeeded()
+        return super.getWritableDatabase()
+    }
+
+    override fun getReadableDatabase(): SQLiteDatabase {
+        installOrUpdateIfNeeded()
+        return super.getReadableDatabase()
+    }
+
+    fun databaseContainsRecord(record: Record): Boolean {
+        val db = super.getReadableDatabase()
+        val id = record.id.uppercase()
+
+        val cursor = db.rawQuery("SELECT id FROM ledger WHERE = id", null)
+        return cursor.count == 1
+    }
+
+    fun databaseContainsCategory(category: String): Boolean {
+        val db = super.getReadableDatabase()
+
+        val cursor = db.rawQuery("SELECT id FROM ledger WHERE = id", null)
+        return cursor.count == 1
     }
 
     companion object {
