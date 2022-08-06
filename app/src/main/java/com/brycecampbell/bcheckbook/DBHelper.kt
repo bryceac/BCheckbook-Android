@@ -185,6 +185,19 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
         }
     }
 
+    fun removeRecord(record: Record) {
+        val db = this.writableDatabase
+        val deleteQuery = "DELETE FROM trades WHERE id = ${record.id.uppercase()}"
+        db.execSQL(deleteQuery)
+        db.close()
+    }
+
+    fun removeRecords(records: MutableList<Record>) {
+        for (record in records) {
+            removeRecord(record)
+        }
+    }
+
     fun balanceForRecord(record: Record): Double {
         return if (databaseContainsRecord(record)) {
             val db = this.readableDatabase
