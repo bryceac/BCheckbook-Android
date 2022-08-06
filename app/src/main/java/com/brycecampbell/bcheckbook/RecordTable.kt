@@ -30,7 +30,7 @@ import me.brycecampbell.bcheck.TransactionType
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun RecordTable(navController: NavHostController? = null, records: MutableList<Record>) {
+fun RecordTable(navController: NavHostController? = null, records: MutableList<Record>, manager: DBHelper? = null) {
     Column {
         TopAppBar(title = {
             Text("Ledger")

@@ -24,7 +24,7 @@ import me.brycecampbell.bcheck.TransactionType
 import java.text.NumberFormat
 
 @Composable
-fun RecordDetailView(navController: NavHostController? = null, records: MutableList<Record>, categories: MutableList<String>, recordIndex: Int) {
+fun RecordDetailView(navController: NavHostController? = null, records: MutableList<Record>, categories: MutableList<String>, recordIndex: Int, manager: DBHelper? = null) {
     val currencyFormatter = NumberFormat.getCurrencyInstance()
     val recordState = remember { mutableStateOf(records[recordIndex]) }
     val recordDateString = remember { mutableStateOf(recordState.value.transaction.date.toString()) }

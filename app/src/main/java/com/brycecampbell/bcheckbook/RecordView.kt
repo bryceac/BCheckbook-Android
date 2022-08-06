@@ -23,7 +23,7 @@ import me.brycecampbell.bcheck.TransactionType
 import java.text.NumberFormat
 
 @Composable
-fun RecordView(record: Record, tapAction: () -> Unit) {
+fun RecordView(record: Record, manager: DBHelper? = null, tapAction: () -> Unit) {
     val currencyFormatter = NumberFormat.getCurrencyInstance()
     val maxWidth = 0.8F
 
