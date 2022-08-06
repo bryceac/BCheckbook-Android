@@ -202,7 +202,7 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
 
     fun retrieveRecords() {
         val db = this.readableDatabase
-        var records = mutableListOf<>()
+        var records = mutableListOf<Record>()
         val cursor = db.rawQuery("SELECT id, date, check_number, reconciled, vendor, memo, category, amount", null)
 
         try {
