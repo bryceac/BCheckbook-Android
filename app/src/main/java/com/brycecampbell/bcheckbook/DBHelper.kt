@@ -1,5 +1,6 @@
 package com.brycecampbell.bcheckbook
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
@@ -149,8 +150,17 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
                 0
             }
 
-            val insertQuery = "Insert INTO trades VALUES (\"$id\", \"$date\", ${if (checkNumber.toString().uppercase().equals("null", ignoreCase = true)) {"NULL"} else {"${checkNumber.toString()}"}}, \"$vendor\", \"$memo\", $amount, ${if (category.toString().uppercase().equals("null", ignoreCase = true)) {"NULL"} else {"${category.toString()}"}}, $reconciled)"
-            db.execSQL(insertQuery)
+            val contentValues = ContentValues()
+            contentValues.put("id", id)
+            contentValues.put("date", date)
+            contentValues.put("check_number", checkNumber)
+            contentValues.put("category", category)
+            contentValues.put("vendor", vendor)
+            contentValues.put("memo", memo)
+            contentValues.put("amount", amount)
+            contentValues.put("reconciled", reconciled)
+
+            db.insert("trades", null, contentValues)
             db.close()
         } else {
             updateRecord(record)
@@ -188,8 +198,16 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
                 0
             }
 
-            val updateQuery = "Update trades SET date = \"$date\", check_number = ${if (checkNumber.toString().uppercase().equals("null", ignoreCase = true)) {"NULL"} else {"${checkNumber.toString()}"}}, vendor = \"$vendor\", memo = \"$memo\", amount = $amount, category = ${if (category.toString().uppercase().equals("null", ignoreCase = true)) {"NULL"} else {"${category.toString()}"}}, reconciled = $reconciled WHERE id = \"$id\""
-            db.execSQL(updateQuery)
+            val contentValues = ContentValues()
+            contentValues.put("date", date)
+            contentValues.put("check_number", checkNumber)
+            contentValues.put("category", category)
+            contentValues.put("vendor", vendor)
+            contentValues.put("memo", memo)
+            contentValues.put("amount", amount)
+            contentValues.put("reconciled", reconciled)
+
+            db.update("trades", contentValues, "id = ?", arrayOf(id))
             db.close()
         }
     }
@@ -202,8 +220,7 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
 
     fun removeRecord(record: Record) {
         val db = this.writableDatabase
-        val deleteQuery = "DELETE FROM trades WHERE id = \"${record.id.uppercase()}\""
-        db.execSQL(deleteQuery)
+        db.delete("trades", "id = ?", arrayOf(record.id.uppercase()))
         db.close()
     }
 
