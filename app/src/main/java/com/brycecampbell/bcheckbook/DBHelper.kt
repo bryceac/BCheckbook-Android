@@ -188,7 +188,7 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
                 0
             }
 
-            val updateQuery = "Update trades SET date = \"$date\", check_number = ${if (checkNumber.toString().uppercase().equals("null", ignoreCase = true)) {"NULL"} else {"${checkNumber.toString()}"}}, vendor = $vendor, memo = $memo, amount = $amount, category = ${if (category.toString().uppercase().equals("null", ignoreCase = true)) {"NULL"} else {"${category.toString()}"}}, reconciled = $reconciled WHERE id = \"$id\""
+            val updateQuery = "Update trades SET date = \"$date\", check_number = ${if (checkNumber.toString().uppercase().equals("null", ignoreCase = true)) {"NULL"} else {"${checkNumber.toString()}"}}, vendor = \"$vendor\", memo = \"$memo\", amount = $amount, category = ${if (category.toString().uppercase().equals("null", ignoreCase = true)) {"NULL"} else {"${category.toString()}"}}, reconciled = $reconciled WHERE id = \"$id\""
             db.execSQL(updateQuery)
             db.close()
         }
