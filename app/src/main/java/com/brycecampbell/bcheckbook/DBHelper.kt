@@ -149,7 +149,7 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
                 0
             }
 
-            val insertQuery = "Insert INTO trades VALUES ($id, $date, ${checkNumber.toString().uppercase()}, $vendor, $memo, $amount, ${category.toString().uppercase()}, $reconciled)"
+            val insertQuery = "Insert INTO trades VALUES (\"$id\", \"$date\", ${if (checkNumber.toString().uppercase().equals("null", ignoreCase = true)) {"NULL"} else {"${checkNumber.toString()}"}}, \"$vendor\", \"$memo\", $amount, ${if (category.toString().uppercase().equals("null", ignoreCase = true)) {"NULL"} else {"${category.toString()}"}}, $reconciled)"
             db.execSQL(insertQuery)
             db.close()
         } else {
