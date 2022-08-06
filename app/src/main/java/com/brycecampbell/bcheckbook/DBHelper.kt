@@ -275,7 +275,7 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
     fun balanceForRecord(record: Record): Double {
         return if (databaseContainsRecord(record)) {
             val db = this.readableDatabase
-            val cursor = db.rawQuery("SELECT balance FROM ledger WHERE id = ${record.id.uppercase()}", null)
+            val cursor = db.rawQuery("SELECT balance FROM ledger WHERE id = \"${record.id.uppercase()}\"", null)
             cursor.moveToFirst()
             val balance = cursor.getDouble(0)
             cursor.close()
