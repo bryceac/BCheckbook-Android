@@ -4,9 +4,11 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import me.brycecampbell.bcheck.Record
+import me.brycecampbell.bcheck.Transaction
 import me.brycecampbell.bcheck.TransactionType
 import java.io.File
 import java.io.FileOutputStream
+import kotlin.math.abs
 
 class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, VERSION) {
     private val preferences = context.getSharedPreferences("${context.packageName}.database_versions",
@@ -15,6 +17,16 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
     private val databaseIsOutdated: Boolean get() {
         return preferences.getInt(DATABASE_NAME, 0) < VERSION
     }
+
+    val records: MutableList<Record> get() {
+        return retrieveRecords()
+    }
+
+    val categories: MutableList<String> get() {
+        return retrieveCategories()
+    }
+
+
 
     override fun onCreate(p0: SQLiteDatabase?) {}
 
@@ -200,17 +212,17 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
         }
     }
 
-    fun retrieveRecords() {
+    private fun retrieveRecords(): MutableList<Record> {
         val db = this.readableDatabase
         var records = mutableListOf<Record>()
         val cursor = db.rawQuery("SELECT id, date, check_number, reconciled, vendor, memo, category, amount", null)
 
-        try {
+        cursor.use { cursor ->
             while (cursor.moveToNext()) {
                 val id = cursor.getString(0)
                 val date = cursor.getString(1)
-                val check_number: Int? = cursor.getString(2).toIntOrNull()
-                val reconciled = cursor.getInt(3)
+                val checkNumber: Int? = cursor.getString(2).toIntOrNull()
+                val reconciled = cursor.getString(3) != "N"
                 val vendor = cursor.getString(4)
                 val memo = cursor.getString(5)
                 val category = if (cursor.getString(6).equals(null.toString(), ignoreCase = true)) {
@@ -219,12 +231,40 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
                     cursor.getString(6)
                 }
                 val amount = cursor.getDouble(7)
-            }
-        } finally {
-            cursor.close()
-        }
 
+                val record = Record(id, Transaction(date,
+                    checkNumber,
+                    category,
+                    vendor,
+                    memo,
+                    abs(amount),
+                    if (amount <= 0.0) {
+                        TransactionType.Withdrawal
+                    } else {
+                        TransactionType.Deposit
+                    },
+                    reconciled))
+
+                records.add(record)
+            }
+        }
+        cursor.close()
         db.close()
+        return records
+    }
+
+    private fun retrieveCategories(): MutableList<String> {
+        val db = this.readableDatabase
+        var categories = mutableListOf<String>()
+        val cursor = db.rawQuery("SELECT category FROM categories", null)
+        cursor.use {cursor ->
+            while(cursor.moveToNext()) {
+                categories.add(cursor.getString(0))
+            }
+        }
+        cursor.close()
+        db.close()
+        return categories
     }
 
     fun balanceForRecord(record: Record): Double {
