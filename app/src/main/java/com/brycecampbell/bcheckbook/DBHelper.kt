@@ -79,7 +79,7 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
         val db = this.readableDatabase
         val id = record.id.uppercase()
 
-        val cursor = db.rawQuery("SELECT id FROM ledger WHERE id = $id", null)
+        val cursor = db.rawQuery("SELECT id FROM ledger WHERE id = \"$id\"", null)
         cursor.moveToFirst()
         val recordExists = cursor.count == 1
         cursor.close()
