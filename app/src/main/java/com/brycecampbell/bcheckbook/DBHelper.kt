@@ -215,7 +215,7 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
     private fun retrieveRecords(): MutableList<Record> {
         val db = this.readableDatabase
         var records = mutableListOf<Record>()
-        val cursor = db.rawQuery("SELECT id, date, check_number, reconciled, vendor, memo, category, amount", null)
+        val cursor = db.rawQuery("SELECT id, date, check_number, reconciled, vendor, memo, category, amount FROM ledger", null)
 
         cursor.use { cursor ->
             while (cursor.moveToNext()) {
