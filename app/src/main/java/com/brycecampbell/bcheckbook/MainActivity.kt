@@ -36,9 +36,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             recordStore = remember { mutableStateListOf() }
             categoryStore = remember { mutableStateListOf() }
-            if (manager.records.isNotEmpty()) {
-                recordStore.addAll(manager.records)
-            }
+            recordStore.addAll(manager.records)
             categoryStore.addAll(manager.categories)
 
             BCheckbookTheme {
