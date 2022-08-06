@@ -91,6 +91,7 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
         val db = this.readableDatabase
 
         val cursor = db.rawQuery("SELECT category FROM categories WHERE category = $category", null)
+        cursor.moveToFirst()
         val categoryExists = cursor.count == 1
         cursor.close()
         db.close()
