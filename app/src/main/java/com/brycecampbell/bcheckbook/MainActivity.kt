@@ -38,11 +38,11 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
                     NavHost(navController, "recordTable") {
-                        composable("recordTable") { RecordTable(navController, recordStore) }
+                        composable("recordTable") { RecordTable(navController, recordStore, manager) }
                         composable("recordDetail/{index}", arguments = listOf(
                             navArgument("index") { type = NavType.IntType }
                         )) {
-                            it.arguments?.getInt("index")?.let { it1 -> RecordDetailView(navController, recordStore, categoryStore, recordIndex = it1) }
+                            it.arguments?.getInt("index")?.let { it1 -> RecordDetailView(navController, recordStore, categoryStore, recordIndex = it1, manager) }
                         }
                     }
                 }
