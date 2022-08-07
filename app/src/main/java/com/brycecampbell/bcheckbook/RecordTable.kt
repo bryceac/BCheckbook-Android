@@ -24,6 +24,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.brycecampbell.bcheckbook.ui.theme.BCheckbookTheme
+import com.github.k1rakishou.fsaf.FileChooser
+import com.github.k1rakishou.fsaf.FileManager
+import com.github.k1rakishou.fsaf.callback.FileChooserCallback
+import com.github.k1rakishou.fsaf.callback.FileCreateCallback
 import me.brycecampbell.bcheck.*
 
 
@@ -70,6 +74,8 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
             writeDocument(manager.context, it, manager.records.encodeToJSONString())
         }
     } */
+    val fileChooser = manager?.context?.let { FileChooser(it) }
+    val fileManager = manager?.let { FileManager(it.context) }
 
     Column {
         TopAppBar(title = {
@@ -98,6 +104,21 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                     /* importLauncher.launch(arrayOf(
                         "application/json"
                     )) */
+                    fileChooser?.openChooseFileDialog(object : FileChooserCallback() {
+                        override fun onResult(uri: Uri) {
+                            val file = fileManager?.fromUri(uri)
+
+                            if (file != null) {
+                                val retrievedRecords = Record.loadFromPath(file.getFullPath())
+                                records.clear()
+                                manager.addRecords(retrievedRecords)
+                                records.addAll(manager.records)
+                            }
+                        }
+
+                        override fun onCancel(reason: String) {}
+                    })
+
                     optionsExpanded.value = false
                 }) {
                     Text("Import Transactions")
@@ -105,6 +126,21 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
 
                 DropdownMenuItem(onClick = {
                     // exportLauncher.launch("")
+                    fileChooser?.openCreateFileDialog("transactions.bcheck", object : FileCreateCallback() {
+                        override fun onResult(uri: Uri) {
+                            val file = fileManager?.fromUri(uri)
+
+                            if (file != null) {
+                                val retrievedRecords = Record.loadFromPath(file.getFullPath())
+                                records.clear()
+                                records.addAll(retrievedRecords)
+                            }
+                        }
+
+                        override fun onCancel(reason: String) {}
+                    })
+
+
                     optionsExpanded.value = false
                 }) {
                     Text("Export Transactions")
