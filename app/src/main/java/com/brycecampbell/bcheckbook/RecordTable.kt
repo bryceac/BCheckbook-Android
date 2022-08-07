@@ -131,9 +131,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                             val file = fileManager?.fromUri(uri)
 
                             if (file != null) {
-                                val retrievedRecords = Record.loadFromPath(file.getFullPath())
-                                records.clear()
-                                records.addAll(retrievedRecords)
+                                manager.records.saveToPath(file.getFullPath())
                             }
                         }
 
