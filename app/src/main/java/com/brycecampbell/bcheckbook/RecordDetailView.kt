@@ -79,7 +79,9 @@ fun RecordDetailView(navController: NavHostController? = null, records: MutableL
                 selectedType.value = it
             })
 
-            ComboBox(categories, if (recordCategory.value == null) { "Uncategorized" } else { recordCategory.value.toString() }, onSelectionChanged = {
+            ComboBox(categories.sortedBy { category ->
+                category
+            }.toMutableList(), if (recordCategory.value == null) { "Uncategorized" } else { recordCategory.value.toString() }, onSelectionChanged = {
                 recordCategory.value = it
             })
 
