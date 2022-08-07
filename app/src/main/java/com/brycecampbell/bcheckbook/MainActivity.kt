@@ -1,6 +1,7 @@
 package com.brycecampbell.bcheckbook
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -21,8 +22,6 @@ class MainActivity : ComponentActivity() {
 
     lateinit var recordStore: SnapshotStateList<Record>
     lateinit var categoryStore: SnapshotStateList<String>
-    val IMPORT_REQUEST_CODE = 1
-    val EXPORT_REQUEST_CODE = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
