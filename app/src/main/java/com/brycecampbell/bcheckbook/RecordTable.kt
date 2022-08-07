@@ -63,7 +63,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                 optionsExpanded.value = false
             }) {
                 DropdownMenuItem(onClick = {
-                    val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
+                    val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
                         .apply {
                             addCategory(Intent.CATEGORY_OPENABLE)
                             type = "application/json"
@@ -77,7 +77,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                 }
 
                 DropdownMenuItem(onClick = {
-                    val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                    val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
                         .apply {
                             addCategory(Intent.CATEGORY_OPENABLE)
                             type = "application/json"
