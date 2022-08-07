@@ -30,31 +30,14 @@ import androidx.compose.ui.unit.dp
 import androidx.documentfile.provider.DocumentFile
 import androidx.navigation.NavHostController
 import com.brycecampbell.bcheckbook.ui.theme.BCheckbookTheme
-import me.brycecampbell.bcheck.Record
-import me.brycecampbell.bcheck.Transaction
-import me.brycecampbell.bcheck.TransactionType
-import me.brycecampbell.bcheck.encodeToJSONString
+import me.brycecampbell.bcheck.*
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 
 @Composable
-fun writeDocument(uri: Uri, content: String) {
-    try {
-        val context = LocalContext.current
-        context.contentResolver.openFileDescriptor(uri, "w")?.use {parcelFileDescriptor ->
-            FileOutputStream(parcelFileDescriptor.fileDescriptor).use { fileOutputStream ->
-                fileOutputStream.write(content.toByteArray())
-            }
+fun writeDocument(uri: Uri)
 
-            Toast.makeText(context, "File Exported Successfully", Toast.LENGTH_SHORT).show()
-        }
-    } catch (error: FileNotFoundException) {
-        print(error.message)
-    } catch (error: IOException) {
-        print(error.message)
-    }
-}
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RecordTable(navController: NavHostController? = null, records: MutableList<Record>, manager: DBHelper? = null) {
@@ -67,19 +50,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
     val exportLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) {
         exportURI.value = it
 
-        if (it != null) {
-            val directory = DocumentFile.fromTreeUri(LocalContext.current, it)
 
-            if (directory != null) {
-                if (directory.exists()) {
-                    val file = directory.createFile("application/json", "transactions.bcheck")
-
-                    if (file != null && file.canWrite()) {
-                        manager?.records?.let { storedRecords -> writeDocument(file.uri, storedRecords.encodeToJSONString()) }
-                    }
-                }
-            }
-        }
     }
 
     Column {
