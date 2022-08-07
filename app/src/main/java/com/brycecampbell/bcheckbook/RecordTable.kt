@@ -38,6 +38,7 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 
+@Composable
 fun writeDocument(uri: Uri, content: String) {
     try {
         val context = LocalContext.current
