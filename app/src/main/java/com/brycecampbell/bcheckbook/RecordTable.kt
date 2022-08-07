@@ -3,6 +3,7 @@ package com.brycecampbell.bcheckbook
 import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateColorAsState
@@ -22,15 +23,37 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.documentfile.provider.DocumentFile
 import androidx.navigation.NavHostController
 import com.brycecampbell.bcheckbook.ui.theme.BCheckbookTheme
 import me.brycecampbell.bcheck.Record
 import me.brycecampbell.bcheck.Transaction
 import me.brycecampbell.bcheck.TransactionType
+import me.brycecampbell.bcheck.encodeToJSONString
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
 
+fun writeDocument(uri: Uri, content: String) {
+    try {
+        val context = LocalContext.current
+        context.contentResolver.openFileDescriptor(uri, "w")?.use {parcelFileDescriptor ->
+            FileOutputStream(parcelFileDescriptor.fileDescriptor).use { fileOutputStream ->
+                fileOutputStream.write(content.toByteArray())
+            }
+
+            Toast.makeText(context, "File Exported Successfully", Toast.LENGTH_SHORT).show()
+        }
+    } catch (error: FileNotFoundException) {
+        print(error.message)
+    } catch (error: IOException) {
+        print(error.message)
+    }
+}
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RecordTable(navController: NavHostController? = null, records: MutableList<Record>, manager: DBHelper? = null) {
@@ -42,6 +65,20 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
 
     val exportLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) {
         exportURI.value = it
+
+        if (it != null) {
+            val directory = DocumentFile.fromTreeUri(LocalContext.current, it)
+
+            if (directory != null) {
+                if (directory.exists()) {
+                    val file = directory.createFile("application/json", "transactions.bcheck")
+
+                    if (file != null && file.canWrite()) {
+                        manager?.records?.let { storedRecords -> writeDocument(file.uri, storedRecords.encodeToJSONString()) }
+                    }
+                }
+            }
+        }
     }
 
     Column {
@@ -77,7 +114,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                 }
 
                 DropdownMenuItem(onClick = {
-                    exportLauncher.launch("transactions")
+                    exportLauncher.launch("")
                     optionsExpanded.value = false
                 }) {
                     Text("Export Transactions")
