@@ -34,7 +34,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 
-fun writeContent(context: Context, uri: Uri, content: String) {
+/* fun writeContent(context: Context, uri: Uri, content: String) {
 
     try {
         context.contentResolver.openFileDescriptor(uri, "w")?.use { parcelFileDescriptor ->
@@ -59,14 +59,14 @@ fun writeDocument(context: Context, uri: Uri?, content: String) {
             }
         }
     }
-}
+} */
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RecordTable(navController: NavHostController? = null, records: MutableList<Record>, manager: DBHelper? = null) {
     val exportURI = remember { mutableStateOf<Uri?>(null) }
     val importURI = remember { mutableStateOf<Uri?>(null) }
-    val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) {
+    /* val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) {
         importURI.value = it
     }
 
@@ -76,7 +76,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
         if (manager != null) {
             writeDocument(manager.context, it, manager.records.encodeToJSONString())
         }
-    }
+    } */
 
     Column {
         TopAppBar(title = {
@@ -102,16 +102,16 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                 optionsExpanded.value = false
             }) {
                 DropdownMenuItem(onClick = {
-                    importLauncher.launch(arrayOf(
+                    /* importLauncher.launch(arrayOf(
                         "application/json"
-                    ))
+                    )) */
                     optionsExpanded.value = false
                 }) {
                     Text("Import Transactions")
                 }
 
                 DropdownMenuItem(onClick = {
-                    exportLauncher.launch("")
+                    // exportLauncher.launch("")
                     optionsExpanded.value = false
                 }) {
                     Text("Export Transactions")
