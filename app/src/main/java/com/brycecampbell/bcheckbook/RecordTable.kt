@@ -1,6 +1,10 @@
 package com.brycecampbell.bcheckbook
 
+import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -31,6 +35,10 @@ import me.brycecampbell.bcheck.TransactionType
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RecordTable(navController: NavHostController? = null, records: MutableList<Record>, manager: DBHelper? = null) {
+    val exportURI = remember { mutableStateOf<Uri?>(null) }
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        exportURI.value = it.data?.data
+    }
     Column {
         TopAppBar(title = {
             Text("Ledger")
@@ -55,12 +63,28 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                 optionsExpanded.value = false
             }) {
                 DropdownMenuItem(onClick = {
+                    val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
+                        .apply {
+                            addCategory(Intent.CATEGORY_OPENABLE)
+                            type = "application/json"
+                            putExtra(Intent.EXTRA_TITLE, "transactions.bcheck")
+                        }
+
+                    launcher.launch(intent)
                     optionsExpanded.value = false
                 }) {
                     Text("Import Transactions")
                 }
 
                 DropdownMenuItem(onClick = {
+                    val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                        .apply {
+                            addCategory(Intent.CATEGORY_OPENABLE)
+                            type = "application/json"
+                            putExtra(Intent.EXTRA_TITLE, "transactions.bcheck")
+                        }
+
+                    launcher.launch(intent)
                     optionsExpanded.value = false
                 }) {
                     Text("Export Transactions")
