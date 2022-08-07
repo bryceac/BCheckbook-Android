@@ -1,9 +1,8 @@
 package com.brycecampbell.bcheckbook
 
-import android.content.Intent
+import android.content.Context
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateColorAsState
@@ -23,7 +22,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -35,22 +33,49 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 
-@Composable
-fun writeDocument(uri: Uri)
+
+fun writeContent(context: Context, uri: Uri, content: String) {
+
+    try {
+        context.contentResolver.openFileDescriptor(uri, "w")?.use { parcelFileDescriptor ->
+            FileOutputStream(parcelFileDescriptor.fileDescriptor).use { fileOutputStream ->
+                fileOutputStream.write(content.toByteArray()) }
+        }
+    } catch (exception: FileNotFoundException) {
+        print(exception.localizedMessage)
+    } catch (exception: IOException) {
+        print(exception.localizedMessage)
+    }
+}
+fun writeDocument(context: Context, uri: Uri?, content: String) {
+    if (uri !=null) {
+        val directory = DocumentFile.fromTreeUri(context, uri)
+
+        if (directory != null) {
+            val file = directory.createFile("application/json", "transactions.bcheck")
+
+            if (file != null && file.canWrite()) {
+                writeContent(context, file.uri, content)
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RecordTable(navController: NavHostController? = null, records: MutableList<Record>, manager: DBHelper? = null) {
     val exportURI = remember { mutableStateOf<Uri?>(null) }
     val importURI = remember { mutableStateOf<Uri?>(null) }
-    val importlauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) {
+    val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) {
         importURI.value = it
     }
 
     val exportLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) {
         exportURI.value = it
 
-
+        if (manager != null) {
+            writeDocument(manager.context, it, manager.records.encodeToJSONString())
+        }
     }
 
     Column {
@@ -77,7 +102,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                 optionsExpanded.value = false
             }) {
                 DropdownMenuItem(onClick = {
-                    importlauncher.launch(arrayOf(
+                    importLauncher.launch(arrayOf(
                         "application/json"
                     ))
                     optionsExpanded.value = false
