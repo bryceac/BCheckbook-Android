@@ -6,7 +6,6 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -67,7 +66,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                         .apply {
                             addCategory(Intent.CATEGORY_OPENABLE)
                             type = "application/json"
-                            putExtra(Intent.EXTRA_TITLE, "transactions.bcheck")
+                            putExtra(Intent.EXTRA_TITLE, "transactions")
                         }
 
                     launcher.launch(intent)
@@ -81,7 +80,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                         .apply {
                             addCategory(Intent.CATEGORY_OPENABLE)
                             type = "application/json"
-                            putExtra(Intent.EXTRA_TITLE, "transactions.bcheck")
+                            putExtra(Intent.EXTRA_TITLE, "transactions")
                         }
 
                     launcher.launch(intent)
