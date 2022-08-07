@@ -35,9 +35,15 @@ import me.brycecampbell.bcheck.TransactionType
 @Composable
 fun RecordTable(navController: NavHostController? = null, records: MutableList<Record>, manager: DBHelper? = null) {
     val exportURI = remember { mutableStateOf<Uri?>(null) }
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        exportURI.value = it.data?.data
+    val importURI = remember { mutableStateOf<Uri?>(null) }
+    val importlauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) {
+        importURI.value = it
     }
+
+    val exportLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) {
+        exportURI.value = it
+    }
+
     Column {
         TopAppBar(title = {
             Text("Ledger")
@@ -62,28 +68,16 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                 optionsExpanded.value = false
             }) {
                 DropdownMenuItem(onClick = {
-                    val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-                        .apply {
-                            addCategory(Intent.CATEGORY_OPENABLE)
-                            type = "application/json"
-                            putExtra(Intent.EXTRA_TITLE, "transactions")
-                        }
-
-                    launcher.launch(intent)
+                    importlauncher.launch(arrayOf(
+                        "application/json"
+                    ))
                     optionsExpanded.value = false
                 }) {
                     Text("Import Transactions")
                 }
 
                 DropdownMenuItem(onClick = {
-                    val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
-                        .apply {
-                            addCategory(Intent.CATEGORY_OPENABLE)
-                            type = "application/json"
-                            putExtra(Intent.EXTRA_TITLE, "transactions")
-                        }
-
-                    launcher.launch(intent)
+                    exportLauncher.launch("transactions")
                     optionsExpanded.value = false
                 }) {
                     Text("Export Transactions")
