@@ -25,13 +25,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.documentfile.provider.DocumentFile
 import androidx.navigation.NavHostController
 import com.brycecampbell.bcheckbook.ui.theme.BCheckbookTheme
 import me.brycecampbell.bcheck.*
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.IOException
 
 
 /* fun writeContent(context: Context, uri: Uri, content: String) {
