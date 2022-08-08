@@ -117,9 +117,9 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                 optionsExpanded.value = false
             }) {
                 DropdownMenuItem(onClick = {
-                    /* importLauncher.launch(arrayOf(
+                    importLauncher.launch(arrayOf(
                         "application/json"
-                    )) */
+                    ))
                     optionsExpanded.value = false
                 }) {
                     Text("Import Transactions")
