@@ -34,7 +34,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 
-fun writeContent(context: Context, uri: Uri, content: String) {
+/* fun writeContent(context: Context, uri: Uri, content: String) {
 
     try {
         context.contentResolver.openFileDescriptor(uri, "w")?.use { parcelFileDescriptor ->
@@ -61,7 +61,7 @@ fun writeDocument(context: Context, uri: Uri?, content: String) {
             }
         }
     }
-}
+} */
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -76,7 +76,8 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
         exportURI.value = it
 
         if (manager != null && exportURI.value != null) {
-            writeDocument(manager.context, exportURI.value, manager.records.encodeToJSONString())
+            // writeDocument(manager.context, exportURI.value, manager.records.encodeToJSONString())
+            manager.records.saveToPath("${exportURI.value!!.path}")
         }
     }
 
