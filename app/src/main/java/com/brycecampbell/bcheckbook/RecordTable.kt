@@ -49,7 +49,7 @@ fun writeContent(context: Context, uri: Uri, content: String) {
         print(exception.localizedMessage)
     }
 }
-fun writeDocument(context: Context, uri: Uri?, content: String) {
+/* fun writeDocument(context: Context, uri: Uri?, content: String) {
     if (uri !=null) {
         val directory = DocumentFile.fromTreeUri(context, uri)
 
@@ -61,7 +61,7 @@ fun writeDocument(context: Context, uri: Uri?, content: String) {
             }
         }
     }
-}
+} */
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -76,7 +76,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
         exportURI.value = it
 
         if (manager != null && exportURI.value != null) {
-            writeDocument(manager.context, exportURI.value, manager.records.encodeToJSONString())
+            writeContent(manager.context, exportURI.value!!, manager.records.encodeToJSONString())
         }
     }
 
