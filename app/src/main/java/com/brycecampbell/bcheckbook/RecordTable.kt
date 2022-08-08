@@ -1,7 +1,10 @@
 package com.brycecampbell.bcheckbook
 
+import android.content.Context
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,21 +25,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.documentfile.provider.DocumentFile
 import androidx.navigation.NavHostController
 import com.brycecampbell.bcheckbook.ui.theme.BCheckbookTheme
-import com.github.k1rakishou.fsaf.FileChooser
-import com.github.k1rakishou.fsaf.FileManager
-import com.github.k1rakishou.fsaf.callback.FileChooserCallback
-import com.github.k1rakishou.fsaf.callback.FileCreateCallback
 import me.brycecampbell.bcheck.*
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
 
 
-/* fun writeContent(context: Context, uri: Uri, content: String) {
+fun writeContent(context: Context, uri: Uri, content: String) {
 
     try {
         context.contentResolver.openFileDescriptor(uri, "w")?.use { parcelFileDescriptor ->
             FileOutputStream(parcelFileDescriptor.fileDescriptor).use { fileOutputStream ->
-                fileOutputStream.write(content.toByteArray()) }
+                fileOutputStream.write(content.toByteArray())
+                fileOutputStream.flush()
+            }
         }
     } catch (exception: FileNotFoundException) {
         print(exception.localizedMessage)
@@ -56,14 +61,14 @@ fun writeDocument(context: Context, uri: Uri?, content: String) {
             }
         }
     }
-} */
+}
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RecordTable(navController: NavHostController? = null, records: MutableList<Record>, manager: DBHelper? = null) {
     val exportURI = remember { mutableStateOf<Uri?>(null) }
     val importURI = remember { mutableStateOf<Uri?>(null) }
-    /* val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) {
+    val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) {
         importURI.value = it
     }
 
@@ -73,9 +78,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
         if (manager != null) {
             writeDocument(manager.context, it, manager.records.encodeToJSONString())
         }
-    } */
-    val fileChooser = manager?.context?.let { FileChooser(it) }
-    val fileManager = manager?.let { FileManager(it.context) }
+    }
 
     Column {
         TopAppBar(title = {
@@ -104,41 +107,13 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                     /* importLauncher.launch(arrayOf(
                         "application/json"
                     )) */
-                    fileChooser?.openChooseFileDialog(object : FileChooserCallback() {
-                        override fun onResult(uri: Uri) {
-                            val file = fileManager?.fromUri(uri)
-
-                            if (file != null) {
-                                val retrievedRecords = Record.loadFromPath(file.getFullPath())
-                                records.clear()
-                                manager.addRecords(retrievedRecords)
-                                records.addAll(manager.records)
-                            }
-                        }
-
-                        override fun onCancel(reason: String) {}
-                    })
-
                     optionsExpanded.value = false
                 }) {
                     Text("Import Transactions")
                 }
 
                 DropdownMenuItem(onClick = {
-                    // exportLauncher.launch("")
-                    fileChooser?.openCreateFileDialog("transactions.bcheck", object : FileCreateCallback() {
-                        override fun onResult(uri: Uri) {
-                            val file = fileManager?.fromUri(uri)
-
-                            if (file != null) {
-                                manager.records.saveToPath(file.getFullPath())
-                            }
-                        }
-
-                        override fun onCancel(reason: String) {}
-                    })
-
-
+                    exportLauncher.launch("transactions")
                     optionsExpanded.value = false
                 }) {
                     Text("Export Transactions")
