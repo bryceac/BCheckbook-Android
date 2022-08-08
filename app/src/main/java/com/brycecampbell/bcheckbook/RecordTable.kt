@@ -75,8 +75,8 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
     val exportLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) {
         exportURI.value = it
 
-        if (manager != null) {
-            writeDocument(manager.context, it, manager.records.encodeToJSONString())
+        if (manager != null && exportURI.value != null) {
+            writeDocument(manager.context, exportURI.value, manager.records.encodeToJSONString())
         }
     }
 
