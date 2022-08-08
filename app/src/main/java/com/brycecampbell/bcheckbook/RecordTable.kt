@@ -29,9 +29,7 @@ import androidx.documentfile.provider.DocumentFile
 import androidx.navigation.NavHostController
 import com.brycecampbell.bcheckbook.ui.theme.BCheckbookTheme
 import me.brycecampbell.bcheck.*
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.IOException
+import java.io.*
 
 
 fun writeContent(context: Context, uri: Uri, content: String) {
@@ -49,19 +47,26 @@ fun writeContent(context: Context, uri: Uri, content: String) {
         print(exception.localizedMessage)
     }
 }
-/* fun writeDocument(context: Context, uri: Uri?, content: String) {
-    if (uri !=null) {
-        val directory = DocumentFile.fromTreeUri(context, uri)
 
-        if (directory != null) {
-            val file = directory.createFile("application/json", "transactions.bcheck")
+fun loadContent(context: Context, uri: Uri, completion: (MutableList<Record>) -> Unit) {
+    val json = StringBuilder()
 
-            if (file != null && file.canWrite()) {
-                writeContent(context, file.uri, content)
+    try {
+        context.contentResolver.openInputStream(uri).use { inputStream ->
+            BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                var line = reader.readLine()
+
+                while(line != null) {
+                    json.append(line)
+                    line = reader.readLine()
+                }
             }
         }
+        completion(Record.decodeFromString(json.toString()).toMutableList())
+    } catch (exception: IOException) {
+        print(exception.localizedMessage)
     }
-} */
+}
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -70,6 +75,14 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
     val importURI = remember { mutableStateOf<Uri?>(null) }
     val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) {
         importURI.value = it
+
+        if (manager != null && importURI.value != null) {
+            loadContent(manager.context, importURI.value!!) {retrievedRecords ->
+                manager.addRecords(retrievedRecords)
+                records.clear()
+                records.addAll(manager.records)
+            }
+        }
     }
 
     val exportLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) {
