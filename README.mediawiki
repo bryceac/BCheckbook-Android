@@ -1,0 +1,81 @@
+=BCheckbook=
+
+'''Version:''' 0.1
+
+'''Author:'''  Bryce Campbell
+
+'''Copyright:''' 2022
+
+'''Description:''' Port of a simple checkbook ledger to Android that can be used to keep track of finances on your computer and on the go without Internet.
+
+'''License:''' See LICENSE
+
+==Notes==
+
+This application is currently a <acronym title="work in progress">WIP</acronym>. Although it currently does not have the capabilities or features 
+of the <a href="https://github.com/bryceac/BCheckbook">original</a>, 
+it has enough to be considered a <acronym title="minimum viable product">MVP</acronym>, and is nearing a point where it can be released into the wild.
+
+This application was written againt Android API level 32, with a current minimum target of Android 10, 
+which may change when the remaining kinks get worked out.
+
+===Questions===
+
+<ol>
+<li>
+<dl>
+<dt style="font-weight:bold">The iOS and macOS apps support QIF. Will this application also support QIF?</dt>
+<dd>
+<p>At present, this is one of the features missing from this app.</p>
+<p>Since I have been away from Android programming for many years 
+and things have changed, especially if you use Jetpack Compose instead of XML, I am not certain as to how to implement that with the code 
+as it is now.</p>
+<p>If you would like to help implement that, you are free to help out.</p>
+</dd>
+</dl>
+</li>
+<li>
+<dl>
+<dt style="font-weight:bold">I am planning to switch to Android. Can I import my data from the iOS or macOS apps?</dt>
+<dd>
+<p>Yes, you definitely can. This app makes use of a library, which I included with the project, I made with the full intention 
+of making it so that Java and Kotlin programmers can read and write the saves from those files.</p>
+<p>However, this app, in its current state, will not recognize your files 
+because it is not setup to recognize the extension I used for the iOS and macOS apps.</p>
+<p>To get around this, change the extension from <strong>bcheck</strong> to <strong>json</strong>. 
+Unlike many other file formats, this is safe to do because bcheck files are essentially JSON files.</p>
+</dd>
+</dl>
+</li>
+</ol>
+
+For any further questions, check out the original project.
+
+===Contributing===
+
+If you are familiar with Android programming and Jetpack Compose, feel free to fork this repo and issue a pull request.
+
+The main things I need to deal with are as follows:
+
+<dl>
+<dt style="font-weight:bold">Dark mode support</dt>
+<dd>
+<p>Unlike iOS, the UI does not automatically change to something suitable for dark mode, such as backgrounds remaining white.</p>
+<p>This is something I intend to try to tackle before releasing into the wild, but I would appreciate some help on this one.</p>
+<p>I would like the background to be a dark color, preferrably not black, to help distinguish content view from the app bar 
+and make sure text is readable.</p>
+</dd>
+<dt style="font-weight:bold">Get swipe to delete functioning properly</dt>
+<dd>
+<p>This is one feature from the iOS app I wanted to carry over to Android, and while I did succeed, 
+there is an issue in which succeeding items get covered up with what is usually seen with the swipe gesture.</p>
+<p>The only way I could get the red to go away was to relaunch the app.</p>
+</dd>
+<dt style="font-weight:bold">Get the bcheck extension recognized as a JSON file</dt>
+<dd>
+<p>This one is kind of new to me in the Android world, but I would like it so that people can select files with the extension 
+<strong>bcheck</strong>, so that mac users do not need to worry about extensions.</p>
+<p>This might be as simple as just making the input and output mime types be that of the one used for plain text, 
+but I strongly doubt it.</p>
+</dd>
+</dl>
