@@ -65,6 +65,7 @@ fun loadContent(context: Context, uri: Uri, completion: (MutableList<Record>) ->
         }
         completion(Record.decodeFromString(json.toString()).toMutableList())
     } catch (exception: IOException) {
+        Toast.makeText(context, "File could not be found or read.", Toast.LENGTH_SHORT).show()
         print(exception.localizedMessage)
     }
 }
