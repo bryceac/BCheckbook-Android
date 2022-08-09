@@ -12,9 +12,9 @@
 
 ==Notes==
 
-This application is currently a <acronym title="work in progress">WIP</acronym>. Although it currently does not have the capabilities or features 
+This application is currently a <abbr title="work in progress">WIP</abbr>. Although it currently does not have the capabilities or features 
 of the <a href="https://github.com/bryceac/BCheckbook">original</a>, 
-it has enough to be considered a <acronym title="minimum viable product">MVP</acronym>, and is nearing a point where it can be released into the wild.
+it has enough to be considered a <abbr title="minimum viable product">MVP</abbr>, and is nearing a point where it can be released into the wild.
 
 This application was written againt Android API level 32, with a current minimum target of Android 10, 
 which may change when the remaining kinks get worked out.
