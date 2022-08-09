@@ -3,6 +3,7 @@ package com.brycecampbell.bcheckbook
 import android.content.Context
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateColorAsState
@@ -40,6 +41,7 @@ fun writeContent(context: Context, uri: Uri, content: String) {
                 fileOutputStream.flush()
             }
         }
+        Toast.makeText(context, "Data exported Successfully", Toast.LENGTH_SHORT).show()
     } catch (exception: FileNotFoundException) {
         print(exception.localizedMessage)
     } catch (exception: IOException) {
