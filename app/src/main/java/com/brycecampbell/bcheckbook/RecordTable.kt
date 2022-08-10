@@ -157,7 +157,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                 SwipeToDismiss(dismissState,
                     directions = setOf(DismissDirection.EndToStart),
                     dismissThresholds = {direction ->
-                        FractionalThreshold(if (direction == DismissDirection.EndToStart) 0.5F else 0.05F)
+                        FractionalThreshold(if (direction == DismissDirection.EndToStart) 0.1F else 0.05F)
                     },
                     background = {
                         val color by animateColorAsState(
