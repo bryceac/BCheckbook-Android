@@ -143,6 +143,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
              */
             itemsIndexed(records) { index, record ->
                 val dismissState = rememberDismissState(
+                    initialValue = DismissValue.Default,
                     confirmStateChange = { dismissValue ->
                         if (dismissValue == DismissValue.DismissedToStart) {
                             records.remove(record)
