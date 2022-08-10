@@ -177,7 +177,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                         }
                     }
                 ) {
-                    Card {
+                    Card(modifier = Modifier.fillMaxWidth()) {
                         RecordView(record, manager) {
                             navController?.navigate("recordDetail/$index")
                         }
