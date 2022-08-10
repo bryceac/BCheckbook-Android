@@ -177,9 +177,12 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                         }
                     }
                 ) {
-                    RecordView(record, manager) {
-                        navController?.navigate("recordDetail/$index")
+                    Card {
+                        RecordView(record, manager) {
+                            navController?.navigate("recordDetail/$index")
+                        }
                     }
+
                 }
             }
         }
