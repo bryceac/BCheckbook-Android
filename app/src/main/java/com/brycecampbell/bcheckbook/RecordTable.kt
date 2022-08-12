@@ -141,7 +141,9 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
             iterate over list with a way to grab element and index,
             to avoid crash caused by Index out of bounds Error.
              */
-            itemsIndexed(records) { index, record ->
+            itemsIndexed(records, {_, record ->
+                record.id
+            }) { index, record ->
                 val dismissState = rememberDismissState(
                     initialValue = DismissValue.Default,
                     confirmStateChange = { dismissValue ->
