@@ -64,10 +64,20 @@ The main things I need to deal with are as follows:
 <p>I would like the background to be a dark color, preferrably not black, to help distinguish content view from the app bar 
 and make sure text is readable.</p>
 </dd>
+<dt style="font-weight:bold">implement search functionality</dt>
+<dd>
+<p>This is something I am having troubles with, due to how things are implemented in Jetpack Compose.</p>
+<p>Currently, there is support for categories to be assigned to transactions, 
+but because of how I have things setup, 
+especially because the object type of the transactions do not support Parcelable.</p>
+<p>Due to the type not being Parcelable, I need to pass the object&#39;s index and the main list.</p>
+<p>If you can solve this issue, I would very much appreciate it, since categories 
+are utterly useless without this.</p>
+</dd>
 <dt style="font-weight:bold">Get the bcheck extension recognized as a JSON file</dt>
 <dd>
 <p>This one is kind of new to me in the Android world, but I would like it so that people can select files with the extension 
-<strong>bcheck</strong>, so that mac users do not need to worry about extensions.</p>
+<strong>bcheck</strong>, so that Mac users do not need to worry about extensions.</p>
 <p>This might be as simple as just making the input and output mime types be that of the one used for plain text, 
 but I strongly doubt it.</p>
 </dd>
