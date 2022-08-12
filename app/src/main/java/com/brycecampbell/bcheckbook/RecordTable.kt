@@ -140,6 +140,8 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
             /*
             iterate over list with a way to grab element and index,
             to avoid crash caused by Index out of bounds Error.
+
+            Key value is specified, so that swipe to delete functionality works properly.
              */
             itemsIndexed(records, {_, record ->
                 record.id
