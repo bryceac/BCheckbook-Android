@@ -65,12 +65,6 @@ The main things I need to deal with are as follows:
 <p>I would like the background to be a dark color, preferrably not black, to help distinguish content view from the app bar 
 and make sure text is readable.</p>
 </dd>
-<dt style="font-weight:bold">Get swipe to delete functioning properly</dt>
-<dd>
-<p>This is one feature from the iOS app I wanted to carry over to Android, and while I did succeed, 
-there is an issue in which succeeding items get covered up with what is usually seen with the swipe gesture.</p>
-<p>The only way I could get the red to go away was to relaunch the app.</p>
-</dd>
 <dt style="font-weight:bold">Get the bcheck extension recognized as a JSON file</dt>
 <dd>
 <p>This one is kind of new to me in the Android world, but I would like it so that people can select files with the extension 
