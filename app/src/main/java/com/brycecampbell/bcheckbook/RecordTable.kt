@@ -211,7 +211,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                 IconButton(onClick = {
                     query.value = ""
                 }) {
-                    Icons.Filled.Close
+                    Icon(Icons.Filled.Clear, "")
                 }
             }
         })
