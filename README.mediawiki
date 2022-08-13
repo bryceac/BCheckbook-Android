@@ -57,13 +57,6 @@ If you are familiar with Android programming and Jetpack Compose, feel free to f
 The main things I need to deal with are as follows:
 
 <dl>
-<dt style="font-weight:bold">Dark mode support</dt>
-<dd>
-<p>Unlike iOS, the UI does not automatically change to something suitable for dark mode, such as backgrounds remaining white.</p>
-<p>This is something I intend to try to tackle before releasing into the wild, but I would appreciate some help on this one.</p>
-<p>I would like the background to be a dark color, preferrably not black, to help distinguish content view from the app bar 
-and make sure text is readable.</p>
-</dd>
 <dt style="font-weight:bold">Get the bcheck extension recognized as a JSON file</dt>
 <dd>
 <p>This one is kind of new to me in the Android world, but I would like it so that people can select files with the extension 
