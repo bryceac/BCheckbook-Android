@@ -94,13 +94,59 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
 
     val query = remember { mutableStateOf("") }
 
-    val filteredRecords = if (query.value.isNotEmpty()) {
+    val filteredRecords = /* if (query.value.isNotEmpty()) {
             records.filter { record ->
                 record.transaction.vendor.equals(query.value, ignoreCase = true) ||
                         record.transaction.vendor.contains(query.value, ignoreCase = true)
             }.toMutableList()
         } else {
             records
+        } */ when {
+            query.value.startsWith("category:") -> {
+                val categoryRegex = "category:\\s(.*)".toRegex()
+                val category = categoryRegex.find(query.value)?.value
+
+                if (category != null) {
+                    records.filter { record ->
+                        val recordCategory = record.transaction.category
+
+                        when {
+                            category.equals("uncategorized", ignoreCase = true) -> recordCategory == null
+                            recordCategory != null -> recordCategory.contains(category, ignoreCase = true)
+                            else -> false
+                        }
+                    }
+                } else {
+                    records
+                }
+            }
+            query.value.contains("category:") -> {
+                val categoryRegex = "category:\\s(.*)".toRegex()
+                val category = categoryRegex.find(query.value)?.value
+                val vendor = query.value.substringBefore("category")
+
+                val recordsFilteredByCategory = if (category != null) {
+                    records.filter { record ->
+                        val recordCategory = record.transaction.category
+
+                        when {
+                            category.equals("uncategorized", ignoreCase = true) -> recordCategory == null
+                            recordCategory != null -> recordCategory.contains(category, ignoreCase = true)
+                            else -> false
+                        }
+                    }
+                } else {
+                    records
+                }
+
+                recordsFilteredByCategory.filter { record ->
+                    record.transaction.vendor.equals(vendor, ignoreCase = true)
+                }
+            }
+            query.value.isNotEmpty() -> records.filter { record ->
+                record.transaction.vendor.equals(query.value, ignoreCase = true)
+            }
+            else -> records
         }
 
     Column {
