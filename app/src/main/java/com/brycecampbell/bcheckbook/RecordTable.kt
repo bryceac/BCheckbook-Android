@@ -135,7 +135,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                     null
                 }
 
-                val vendor = query.value.substringBefore("category")
+                val vendor = query.value.substringBefore("category").trim()
 
                 val recordsFilteredByCategory = if (category.isNullOrEmpty()) {
                     records
