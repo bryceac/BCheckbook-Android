@@ -147,7 +147,8 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
 
         TextField(query.value, onValueChange = {
             query.value = it
-        }, leadingIcon = {
+        }, modifier = Modifier.fillMaxWidth(),
+            leadingIcon = {
             Icon(Icons.Filled.Search, "")
         }, trailingIcon = {
             if (query.value.isNotEmpty()) {
