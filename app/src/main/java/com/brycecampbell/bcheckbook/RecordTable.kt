@@ -111,7 +111,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                         record.transaction.category == null
                     } else {
                         record.transaction.category.equals(category, ignoreCase = true) ||
-                                record.transaction.category?.contains(category!!, ignoreCase = true)!!
+                                category?.let { record.transaction.category?.contains(it, ignoreCase = true) }!!
                     }
                 }
             }
@@ -124,7 +124,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                     (record.transaction.vendor.equals(vendor, ignoreCase = true) ||
                             record.transaction.vendor.contains(vendor, ignoreCase = true)) &&
                             (record.transaction.category.equals(category, ignoreCase = true) ||
-                                    record.transaction.category?.contains(category!!, ignoreCase = true)!!)
+                                    category?.let { record.transaction.category?.contains(it, ignoreCase = true) }!!)
                 }
 
             }
