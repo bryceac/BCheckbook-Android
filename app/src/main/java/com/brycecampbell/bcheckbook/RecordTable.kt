@@ -29,7 +29,6 @@ import com.brycecampbell.bcheckbook.ui.theme.BCheckbookTheme
 import me.brycecampbell.bcheck.*
 import java.io.*
 
-
 fun writeContent(context: Context, uri: Uri, content: String) {
 
     try {
@@ -95,40 +94,13 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
 
     val query = remember { mutableStateOf("") }
 
-    val filteredRecords = /* if (query.value.isNotEmpty()) {
+    val filteredRecords = if (query.value.isNotEmpty()) {
             records.filter { record ->
                 record.transaction.vendor.equals(query.value, ignoreCase = true) ||
                         record.transaction.vendor.contains(query.value, ignoreCase = true)
             }.toMutableList()
         } else {
             records
-        } */ when {
-            query.value.startsWith("category") -> {
-                val categoryRegex = "category:\\s(.*)".toRegex()
-                val category = categoryRegex.find(query.value)?.value
-                records.filter { record ->
-                    if (category.equals("uncategorized", ignoreCase = true)) {
-                        record.transaction.category == null
-                    } else {
-                        record.transaction.category.equals(category, ignoreCase = true) ||
-                                category?.let { record.transaction.category?.contains(it, ignoreCase = true) }!!
-                    }
-                }
-            }
-            query.value.contains("category:") -> {
-                val categoryRegex = "category:\\s(.*)".toRegex()
-                val category = categoryRegex.find(query.value)?.value
-                val vendor = query.value.substringBefore("category:")
-
-                records.filter {record ->
-                    (record.transaction.vendor.equals(vendor, ignoreCase = true) ||
-                            record.transaction.vendor.contains(vendor, ignoreCase = true)) &&
-                            (record.transaction.category.equals(category, ignoreCase = true) ||
-                                    category?.let { record.transaction.category?.contains(it, ignoreCase = true) }!!)
-                }
-
-            }
-            else -> records
         }
 
     Column {
