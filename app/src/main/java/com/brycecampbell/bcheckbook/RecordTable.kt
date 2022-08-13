@@ -112,7 +112,8 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
 
                         when {
                             category.equals("uncategorized", ignoreCase = true) -> recordCategory == null
-                            recordCategory != null -> recordCategory.contains(category, ignoreCase = true)
+                            recordCategory != null -> recordCategory.contains(category, ignoreCase = true) ||
+                                    recordCategory.equals(category, ignoreCase = true)
                             else -> false
                         }
                     }
@@ -131,7 +132,8 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
 
                         when {
                             category.equals("uncategorized", ignoreCase = true) -> recordCategory == null
-                            recordCategory != null -> recordCategory.contains(category, ignoreCase = true)
+                            recordCategory != null -> recordCategory.contains(category, ignoreCase = true) ||
+                                    recordCategory.equals(category, ignoreCase = true)
                             else -> false
                         }
                     }
@@ -140,11 +142,13 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                 }
 
                 recordsFilteredByCategory.filter { record ->
-                    record.transaction.vendor.equals(vendor, ignoreCase = true)
+                    record.transaction.vendor.equals(vendor, ignoreCase = true) ||
+                            record.transaction.vendor.contains(vendor, ignoreCase = true)
                 }
             }
             query.value.isNotEmpty() -> records.filter { record ->
-                record.transaction.vendor.equals(query.value, ignoreCase = true)
+                record.transaction.vendor.equals(query.value, ignoreCase = true) ||
+                        record.transaction.vendor.contains(query.value, ignoreCase = true)
             }
             else -> records
         }
