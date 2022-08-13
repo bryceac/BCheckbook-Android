@@ -97,8 +97,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
 
     val query = remember { mutableStateOf("") }
 
-    val filteredRecords = {
-        if (query.value.isNotEmpty()) {
+    val filteredRecords = if (query.value.isNotEmpty()) {
             records.filter { record ->
                 record.transaction.vendor.equals(query.value, ignoreCase = true) ||
                         record.transaction.vendor.contains(query.value, ignoreCase = true)
@@ -106,7 +105,6 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
         } else {
             records
         }
-    }
 
     Column {
         TopAppBar(title = {
@@ -156,9 +154,9 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
 
             Key value is specified, so that swipe to delete functionality works properly.
              */
-            itemsIndexed(records, {_, record ->
+            itemsIndexed(filteredRecords, {_, record ->
                 record.id
-            }) { index, record ->
+            }) { _, record ->
                 val dismissState = rememberDismissState(
                     initialValue = DismissValue.Default,
                     confirmStateChange = { dismissValue ->
@@ -169,6 +167,8 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                         true
                     }
                 )
+
+                val mainIndex = records.indexOfFirst { it.id == record.id }
 
 
 
@@ -197,7 +197,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                 ) {
                     Card(modifier = Modifier.fillMaxWidth()) {
                         RecordView(record, manager) {
-                            navController?.navigate("recordDetail/$index")
+                            navController?.navigate("recordDetail/$mainIndex")
                         }
                     }
 
