@@ -95,13 +95,31 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
 
     val query = remember { mutableStateOf("") }
 
-    val filteredRecords = if (query.value.isNotEmpty()) {
+    val filteredRecords = /* if (query.value.isNotEmpty()) {
             records.filter { record ->
                 record.transaction.vendor.equals(query.value, ignoreCase = true) ||
                         record.transaction.vendor.contains(query.value, ignoreCase = true)
             }.toMutableList()
         } else {
             records
+        } */ when {
+            query.value.startsWith("category") -> {
+                val categoryRegex = "category:\\s(.*)".toRegex()
+                val category = categoryRegex.find(query.value).value
+                records.filter { record ->
+                    if (category.equals("uncategorized", ignoreCase = true)) {
+                        record.transaction.category == null
+                    } else {
+                        record.transaction.category.equals(category, ignoreCase = true) ||
+                                record.transaction.category.contains(category, ignoreCase = true)
+                    }
+                }
+            }
+            query.value.contains("category:") -> {
+                val categoryRegex = "category:\\s(.*)".toRegex()
+                val category = categoryRegex.find(query.value).value
+            }
+            else -> records
         }
 
     Column {
