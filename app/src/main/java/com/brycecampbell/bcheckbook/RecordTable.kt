@@ -105,19 +105,28 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
         } */ when {
             query.value.startsWith("category") -> {
                 val categoryRegex = "category:\\s(.*)".toRegex()
-                val category = categoryRegex.find(query.value).value
+                val category = categoryRegex.find(query.value)?.value
                 records.filter { record ->
                     if (category.equals("uncategorized", ignoreCase = true)) {
                         record.transaction.category == null
                     } else {
                         record.transaction.category.equals(category, ignoreCase = true) ||
-                                record.transaction.category.contains(category, ignoreCase = true)
+                                record.transaction.category?.contains(category!!, ignoreCase = true)!!
                     }
                 }
             }
             query.value.contains("category:") -> {
                 val categoryRegex = "category:\\s(.*)".toRegex()
-                val category = categoryRegex.find(query.value).value
+                val category = categoryRegex.find(query.value)?.value
+                val vendor = query.value.substringBefore("category:")
+
+                records.filter {record ->
+                    (record.transaction.vendor.equals(vendor, ignoreCase = true) ||
+                            record.transaction.vendor.contains(vendor, ignoreCase = true)) &&
+                            (record.transaction.category.equals(category, ignoreCase = true) ||
+                                    record.transaction.category?.contains(category!!, ignoreCase = true)!!)
+                }
+
             }
             else -> records
         }
