@@ -106,7 +106,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                 val categoryRegex = "category:\\s(.*)".toRegex()
                 val category = categoryRegex.find(query.value)?.value
 
-                if (category != null) {
+                if (category != null && category.isNotEmpty()) {
                     records.filter { record ->
                         val recordCategory = record.transaction.category
 
@@ -126,7 +126,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                 val category = categoryRegex.find(query.value)?.value
                 val vendor = query.value.substringBefore("category")
 
-                val recordsFilteredByCategory = if (category != null) {
+                val recordsFilteredByCategory = if (category != null && category.isNotEmpty()) {
                     records.filter { record ->
                         val recordCategory = record.transaction.category
 
