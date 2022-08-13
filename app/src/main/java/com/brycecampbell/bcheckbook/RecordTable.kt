@@ -114,8 +114,8 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                         val recordCategory = record.transaction.category
 
                         when {
-                            category.equals("uncategorized", ignoreCase = true) -> recordCategory == null
-                            recordCategory != null -> recordCategory.contains(category, ignoreCase = true) ||
+                            category.equals("uncategorized", ignoreCase = true) -> recordCategory.isNullOrEmpty()
+                            !recordCategory.isNullOrEmpty() -> recordCategory.contains(category, ignoreCase = true) ||
                                     recordCategory.equals(category, ignoreCase = true)
                             else -> false
                         }
@@ -135,8 +135,8 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                         val recordCategory = record.transaction.category
 
                         when {
-                            category.equals("uncategorized", ignoreCase = true) -> recordCategory == null
-                            recordCategory != null -> recordCategory.contains(category, ignoreCase = true) ||
+                            category.equals("uncategorized", ignoreCase = true) -> recordCategory.isNullOrEmpty()
+                            !recordCategory.isNullOrEmpty() -> recordCategory.contains(category, ignoreCase = true) ||
                                     recordCategory.equals(category, ignoreCase = true)
                             else -> false
                         }
