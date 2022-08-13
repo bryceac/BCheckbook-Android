@@ -142,13 +142,13 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                 }
 
                 recordsFilteredByCategory.filter { record ->
-                    record.transaction.vendor.equals(vendor, ignoreCase = true) ||
-                            record.transaction.vendor.contains(vendor, ignoreCase = true)
+                    record.transaction.vendor.contains(vendor, ignoreCase = true) ||
+                            record.transaction.vendor.equals(vendor, ignoreCase = true)
                 }
             }
             query.value.isNotEmpty() -> records.filter { record ->
-                record.transaction.vendor.equals(query.value, ignoreCase = true) ||
-                        record.transaction.vendor.contains(query.value, ignoreCase = true)
+                record.transaction.vendor.contains(query.value, ignoreCase = true) ||
+                        record.transaction.vendor.equals(query.value, ignoreCase = true)
             }
             else -> records
         }
