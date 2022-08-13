@@ -95,6 +95,19 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
         }
     }
 
+    val query = remember { mutableStateOf("") }
+
+    val filteredRecords = {
+        if (query.value.isNotEmpty()) {
+            records.filter { record ->
+                record.transaction.vendor.equals(query.value, ignoreCase = true) ||
+                        record.transaction.vendor.contains(query.value, ignoreCase = true)
+            }.toMutableList()
+        } else {
+            records
+        }
+    }
+
     Column {
         TopAppBar(title = {
             Text("Ledger")
