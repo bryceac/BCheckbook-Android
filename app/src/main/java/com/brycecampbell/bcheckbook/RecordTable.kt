@@ -13,9 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -143,6 +141,20 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                     optionsExpanded.value = false
                 }) {
                     Text("Export Transactions")
+                }
+            }
+        })
+
+        TextField(query.value, onValueChange = {
+            query.value = it
+        }, leadingIcon = {
+            Icon(Icons.Filled.Search, "")
+        }, trailingIcon = {
+            if (query.value.isNotEmpty()) {
+                IconButton(onClick = {
+                    query.value = ""
+                }) {
+                    Icons.Filled.Close
                 }
             }
         })
