@@ -30,23 +30,12 @@ fun <T> Picker(list: List<T>, selected: T, onSelectionChanged: (T) -> Unit) {
     }) {
         OutlinedTextField(selectedItem.value.toString(),
             onValueChange = {}, label = {
-                if (isSystemInDarkTheme()) {
-                    Text("Type", color = Color.Black)
-                } else {
-                    Text("Type")
-                }
+                Text("Type")
             }, modifier = Modifier.fillMaxWidth().clickable {
                 expanded.value = !expanded.value
             },
             trailingIcon = {
-                if (isSystemInDarkTheme()) {
-                    Icon(Icons.Filled.ArrowDropDown,
-                        "",
-                        tint = Color.Black
-                    )
-                } else {
-                    Icon(Icons.Filled.ArrowDropDown, "")
-                }
+                Icon(Icons.Filled.ArrowDropDown, "")
             }, readOnly = true)
 
         ExposedDropdownMenu(expanded.value, modifier = Modifier.fillMaxWidth(), onDismissRequest = {
