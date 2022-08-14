@@ -114,65 +114,67 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
             }
         })
 
-        ActivityIndicator(true)
+        Box {
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
+                /*
+                iterate over list with a way to grab element and index,
+                to avoid crash caused by Index out of bounds Error.
 
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
-            /*
-            iterate over list with a way to grab element and index,
-            to avoid crash caused by Index out of bounds Error.
-
-            Key value is specified, so that swipe to delete functionality works properly.
-             */
-            itemsIndexed(viewModel.filteredRecords.sortedBy { record ->
-                record.transaction.date }, {_, record ->
-                record.id
-            }) { _, record ->
-                val dismissState = rememberDismissState(
-                    initialValue = DismissValue.Default,
-                    confirmStateChange = { dismissValue ->
-                        if (dismissValue == DismissValue.DismissedToStart) {
-                            records.remove(record)
-                            manager?.removeRecord(record)
-                        }
-                        true
-                    }
-                )
-
-                val mainIndex = records.indexOfFirst { it.id == record.id }
-
-
-
-                SwipeToDismiss(dismissState,
-                    directions = setOf(DismissDirection.EndToStart),
-                    dismissThresholds = {direction ->
-                        FractionalThreshold(if (direction == DismissDirection.EndToStart) 0.1F else 0.05F)
-                    },
-                    background = {
-                        val color by animateColorAsState(
-                            when (dismissState.targetValue) {
-                                DismissValue.Default -> Color.White
-                                else -> Color.Red
+                Key value is specified, so that swipe to delete functionality works properly.
+                 */
+                itemsIndexed(viewModel.filteredRecords.sortedBy { record ->
+                    record.transaction.date }, {_, record ->
+                    record.id
+                }) { _, record ->
+                    val dismissState = rememberDismissState(
+                        initialValue = DismissValue.Default,
+                        confirmStateChange = { dismissValue ->
+                            if (dismissValue == DismissValue.DismissedToStart) {
+                                records.remove(record)
+                                manager?.removeRecord(record)
                             }
-                        )
+                            true
+                        }
+                    )
 
-                        Box(Modifier.fillMaxSize()
-                            .background(color)
-                            .padding(horizontal = Dp(20F)),
-                            contentAlignment = Alignment.CenterEnd) {
-                            if (dismissState.targetValue != DismissValue.Default) {
-                                Icon(Icons.Filled.Delete, "", tint = Color.White)
+                    val mainIndex = records.indexOfFirst { it.id == record.id }
+
+
+
+                    SwipeToDismiss(dismissState,
+                        directions = setOf(DismissDirection.EndToStart),
+                        dismissThresholds = {direction ->
+                            FractionalThreshold(if (direction == DismissDirection.EndToStart) 0.1F else 0.05F)
+                        },
+                        background = {
+                            val color by animateColorAsState(
+                                when (dismissState.targetValue) {
+                                    DismissValue.Default -> Color.White
+                                    else -> Color.Red
+                                }
+                            )
+
+                            Box(Modifier.fillMaxSize()
+                                .background(color)
+                                .padding(horizontal = Dp(20F)),
+                                contentAlignment = Alignment.CenterEnd) {
+                                if (dismissState.targetValue != DismissValue.Default) {
+                                    Icon(Icons.Filled.Delete, "", tint = Color.White)
+                                }
                             }
                         }
-                    }
-                ) {
-                    Card(modifier = Modifier.fillMaxWidth()) {
-                        RecordView(record, manager) {
-                            navController?.navigate("recordDetail/$mainIndex")
+                    ) {
+                        Card(modifier = Modifier.fillMaxWidth()) {
+                            RecordView(record, manager) {
+                                navController?.navigate("recordDetail/$mainIndex")
+                            }
                         }
-                    }
 
+                    }
                 }
             }
+
+            ActivityIndicator(viewModel.isLoading.value)
         }
     }
 }
