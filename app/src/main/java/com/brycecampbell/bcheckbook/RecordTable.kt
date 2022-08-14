@@ -49,13 +49,11 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
         exportURI.value = it
 
         if (manager != null && exportURI.value != null) {
-           val result = viewModel.exportRecords(exportURI.value!!)
-
-            if (result != null) {
-                if (result.isSuccess) {
-                    Toast.makeText(manager.context,"Transactions exported successfully", Toast.LENGTH_SHORT).show()
-                }
-            }
+           viewModel.exportRecords(exportURI.value!!) { result ->
+               if (result != null && result.isSuccess) {
+                   Toast.makeText(manager.context, "Transactions saved successfully", Toast.LENGTH_SHORT).show()
+               }
+           }
         }
     }
 
