@@ -42,7 +42,9 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
         importURI.value = it
 
         if (importURI.value != null) {
+            isLoading.value = true
             viewModel.importRecords(importURI.value!!)
+            isLoading.value = false
         }
     }
 
