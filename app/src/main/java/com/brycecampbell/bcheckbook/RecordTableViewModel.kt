@@ -75,6 +75,11 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
         else -> records
     }
 
+    fun addRecord(record: Record) {
+        records.add(record)
+        manager?.addRecord(record)
+    }
+
     suspend fun addRecords(givenRecords: MutableList<Record>) {
             manager?.addRecords(givenRecords)
     }

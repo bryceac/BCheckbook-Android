@@ -32,17 +32,17 @@ import java.io.*
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RecordTable(navController: NavHostController? = null, records: MutableList<Record>, manager: DBHelper? = null) {
+    val query = remember { mutableStateOf("") }
+
+    val viewModel = RecordTableViewModel(manager, records, query)
+
     val exportURI = remember { mutableStateOf<Uri?>(null) }
     val importURI = remember { mutableStateOf<Uri?>(null) }
     val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) {
         importURI.value = it
 
         if (manager != null && importURI.value != null) {
-            loadContent(manager.context, importURI.value!!) {retrievedRecords ->
-                manager.addRecords(retrievedRecords)
-                records.clear()
-                records.addAll(manager.records)
-            }
+            viewModel.importRecords(importURI.value!!)
         }
     }
 
@@ -50,11 +50,17 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
         exportURI.value = it
 
         if (manager != null && exportURI.value != null) {
-            writeContent(manager.context, exportURI.value!!, manager.records.encodeToJSONString())
+           val result = viewModel.exportRecords(exportURI.value!!)
+
+            if (result != null) {
+                if (result.isSuccess) {
+                    Toast.makeText(manager.context,"Transactions exported successfully", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
-    val query = remember { mutableStateOf("") }
+
 
     Column {
         TopAppBar(title = {
@@ -101,7 +107,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
             query.value = it
         }, modifier = Modifier.fillMaxWidth(),
             placeholder = {
-                Text("Search Transactons...")
+                Text("Search Transactions...")
             },
             leadingIcon = {
             Icon(Icons.Filled.Search, "")
@@ -122,7 +128,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
 
             Key value is specified, so that swipe to delete functionality works properly.
              */
-            itemsIndexed(filteredRecords, {_, record ->
+            itemsIndexed(viewModel.filteredRecords, {_, record ->
                 record.id
             }) { _, record ->
                 val dismissState = rememberDismissState(
