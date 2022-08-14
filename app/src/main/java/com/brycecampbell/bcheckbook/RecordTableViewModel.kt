@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import me.brycecampbell.bcheck.Record
 import me.brycecampbell.bcheck.encodeToJSONString
@@ -154,6 +155,7 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
     fun importRecords(uri: Uri) {
         isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
+            delay(5000)
             if (manager != null) {
                 val retrievedRecordsResult = loadContent(manager.context, uri)
 
