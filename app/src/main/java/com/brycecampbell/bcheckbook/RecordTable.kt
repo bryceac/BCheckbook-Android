@@ -39,8 +39,9 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
     val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) {
         importURI.value = it
 
-        if (manager != null && importURI.value != null) {
+        if (importURI.value != null) {
             viewModel.importRecords(importURI.value!!)
+            viewModel.reloadRecords()
         }
     }
 
