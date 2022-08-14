@@ -110,8 +110,10 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
     private fun addCategory(category: String) {
         if (!databaseContainsCategory(category)) {
             val db = this.writableDatabase
-            val insertQuery = "Insert Into categories (category) VALUES ($category)"
-            db.execSQL(insertQuery)
+            val contentValues = ContentValues()
+            contentValues.put("category", category)
+
+            db.insert("categories", "category", contentValues)
             db.close()
         }
     }
