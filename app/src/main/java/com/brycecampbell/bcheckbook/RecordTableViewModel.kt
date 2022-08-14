@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.brycecampbell.bcheck.Record
 
-class RecordTableViewModel(val manager: DBHelper? = null, var records: MutableList<Record>, val queryState: MutableState<String>): ViewModel() {
+class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableList<Record>, val queryState: MutableState<String>): ViewModel() {
     val filteredRecords = when {
         queryState.value.startsWith("category:") -> {
             val categoryRegex = "category:\\s(.*)".toRegex()
@@ -74,6 +74,13 @@ class RecordTableViewModel(val manager: DBHelper? = null, var records: MutableLi
     suspend fun addRecords(givenRecords: MutableList<Record>) {
         viewModelScope.launch(Dispatchers.Default) {
             manager?.addRecords(givenRecords)
+        }
+    }
+
+    fun reloadRecords() {
+        if (manager != null) {
+            records.clear()
+            records.addAll(manager.records)
         }
     }
 }
