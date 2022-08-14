@@ -153,8 +153,8 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
     }
 
     fun importRecords(uri: Uri) {
-        isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
+            isLoading.value = true
             delay(5000)
             if (manager != null) {
                 val retrievedRecordsResult = loadContent(manager.context, uri)
