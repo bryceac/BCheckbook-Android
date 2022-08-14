@@ -90,17 +90,19 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
 
     suspend fun writeContent(context: Context, uri: Uri, content: String) {
 
-        try {
-            context.contentResolver.openFileDescriptor(uri, "w")?.use { parcelFileDescriptor ->
-                FileOutputStream(parcelFileDescriptor.fileDescriptor).use { fileOutputStream ->
-                    fileOutputStream.write(content.toByteArray())
-                    fileOutputStream.flush()
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                context.contentResolver.openFileDescriptor(uri, "w")?.use { parcelFileDescriptor ->
+                    FileOutputStream(parcelFileDescriptor.fileDescriptor).use { fileOutputStream ->
+                        fileOutputStream.write(content.toByteArray())
+                        fileOutputStream.flush()
+                    }
                 }
+            } catch (exception: FileNotFoundException) {
+                print(exception.localizedMessage)
+            } catch (exception: IOException) {
+                print(exception.localizedMessage)
             }
-        } catch (exception: FileNotFoundException) {
-            print(exception.localizedMessage)
-        } catch (exception: IOException) {
-            print(exception.localizedMessage)
         }
     }
 
