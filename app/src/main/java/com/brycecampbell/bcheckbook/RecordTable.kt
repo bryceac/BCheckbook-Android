@@ -41,7 +41,6 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
 
         if (importURI.value != null) {
             viewModel.importRecords(importURI.value!!)
-            viewModel.reloadRecords()
         }
     }
 
