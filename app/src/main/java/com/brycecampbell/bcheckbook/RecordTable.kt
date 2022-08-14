@@ -123,7 +123,8 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
 
             Key value is specified, so that swipe to delete functionality works properly.
              */
-            itemsIndexed(viewModel.filteredRecords, {_, record ->
+            itemsIndexed(viewModel.filteredRecords.sortedBy { record ->
+                record.transaction.date }, {_, record ->
                 record.id
             }) { _, record ->
                 val dismissState = rememberDismissState(
