@@ -132,16 +132,17 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
         return result!!
     }
 
-    fun exportRecords(uri: Uri): Result<Unit>? {
+    fun exportRecords(uri: Uri, completion: (Result<Unit>?) -> Unit) {
         var results: Result<Unit>? = null
 
         viewModelScope.launch(Dispatchers.IO) {
             if (manager != null) {
                 results = writeContent(manager.context, uri, manager.records.encodeToJSONString())
+                completion(results)
+            } else {
+                completion(results)
             }
         }
-
-        return results
     }
 
     fun importRecords(uri: Uri) {
