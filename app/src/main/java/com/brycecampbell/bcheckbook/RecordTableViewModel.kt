@@ -89,24 +89,20 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
     }
 
     suspend fun writeContent(context: Context, uri: Uri, content: String) {
-        try {
+        runCatching {
             context.contentResolver.openFileDescriptor(uri, "w")?.use { parcelFileDescriptor ->
                 FileOutputStream(parcelFileDescriptor.fileDescriptor).use { fileOutputStream ->
                     fileOutputStream.write(content.toByteArray())
                     fileOutputStream.flush()
                 }
             }
-        } catch (exception: FileNotFoundException) {
-            print(exception.localizedMessage)
-        } catch (exception: IOException) {
-            print(exception.localizedMessage)
         }
     }
 
-    suspend fun loadContent(context: Context, uri: Uri): List<Record> {
+    suspend fun loadContent(context: Context, uri: Uri): Result<List<Record>> {
         val json = StringBuilder()
 
-        try {
+        runCatching {
             context.contentResolver.openInputStream(uri).use { inputStream ->
                 BufferedReader(InputStreamReader(inputStream)).use { reader ->
                     var line = reader.readLine()
@@ -117,10 +113,7 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
                     }
                 }
             }
-            return Record.decodeFromString(json.toString())
-        } catch (exception: IOException) {
-            Toast.makeText(context, "File could not be found or read.", Toast.LENGTH_SHORT).show()
-            print(exception.localizedMessage)
+            Record.decodeFromString(json.toString())
         }
     }
 }
