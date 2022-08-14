@@ -34,17 +34,13 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
 
     val viewModel = RecordTableViewModel(manager, records, query)
 
-    val isLoading = remember { mutableStateOf(false) }
-
     val exportURI = remember { mutableStateOf<Uri?>(null) }
     val importURI = remember { mutableStateOf<Uri?>(null) }
     val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) {
         importURI.value = it
 
         if (importURI.value != null) {
-            isLoading.value = true
             viewModel.importRecords(importURI.value!!)
-            isLoading.value = false
         }
     }
 
