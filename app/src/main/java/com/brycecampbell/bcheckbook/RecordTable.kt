@@ -34,6 +34,8 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
 
     val viewModel = RecordTableViewModel(manager, records, query)
 
+    val isLoading = remember { mutableStateOf(false) }
+
     val exportURI = remember { mutableStateOf<Uri?>(null) }
     val importURI = remember { mutableStateOf<Uri?>(null) }
     val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) {
@@ -55,8 +57,6 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
            }
         }
     }
-
-
 
     Column {
         TopAppBar(title = {
@@ -116,7 +116,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
             }
         })
 
-        if (viewModel.isLoading) {
+        if (isLoading.value) {
             CircularProgressIndicator()
             Text("Loading Data...")
         } else {
