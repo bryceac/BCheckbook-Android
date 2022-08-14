@@ -80,7 +80,7 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
         manager?.addRecord(record)
     }
 
-    suspend fun addRecords(givenRecords: MutableList<Record>) {
+    private suspend fun addRecords(givenRecords: MutableList<Record>) {
             manager?.addRecords(givenRecords)
     }
 
@@ -91,7 +91,7 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
         }
     }
 
-    suspend fun writeContent(context: Context, uri: Uri, content: String): Result<Unit> {
+    private suspend fun writeContent(context: Context, uri: Uri, content: String): Result<Unit> {
         var result: Result<Unit>? = null
 
         runCatching {
@@ -109,7 +109,7 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
         return result!!
     }
 
-    suspend fun loadContent(context: Context, uri: Uri): Result<List<Record>> {
+    private suspend fun loadContent(context: Context, uri: Uri): Result<List<Record>> {
         val json = StringBuilder()
         var result: Result<List<Record>>? = null
 
@@ -138,8 +138,9 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
         viewModelScope.launch(Dispatchers.IO) {
             if (manager != null) {
                 results = writeContent(manager.context, uri, manager.records.encodeToJSONString())
-                completion(results)
-            } else {
+            }
+
+            viewModelScope.launch(Dispatchers.Main) {
                 completion(results)
             }
         }
@@ -150,8 +151,11 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
             if (manager != null) {
                 val retrievedRecordsResult = loadContent(manager.context, uri)
 
-                retrievedRecordsResult.onSuccess { retrievedRecords ->
-                    addRecords(retrievedRecords.toMutableList())
+                viewModelScope.launch(Dispatchers.Main) {
+                    retrievedRecordsResult.onSuccess { retrievedRecords ->
+                        addRecords(retrievedRecords.toMutableList())
+                        reloadRecords()
+                    }
                 }
             }
         }
