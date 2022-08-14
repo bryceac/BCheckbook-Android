@@ -1,11 +1,15 @@
 package com.brycecampbell.bcheckbook
 
+import android.content.Context
+import android.net.Uri
+import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.brycecampbell.bcheck.Record
+import java.io.*
 
 class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableList<Record>, val queryState: MutableState<String>): ViewModel() {
     val filteredRecords = when {
@@ -81,6 +85,43 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
         if (manager != null) {
             records.clear()
             records.addAll(manager.records)
+        }
+    }
+
+    suspend fun writeContent(context: Context, uri: Uri, content: String) {
+
+        try {
+            context.contentResolver.openFileDescriptor(uri, "w")?.use { parcelFileDescriptor ->
+                FileOutputStream(parcelFileDescriptor.fileDescriptor).use { fileOutputStream ->
+                    fileOutputStream.write(content.toByteArray())
+                    fileOutputStream.flush()
+                }
+            }
+        } catch (exception: FileNotFoundException) {
+            print(exception.localizedMessage)
+        } catch (exception: IOException) {
+            print(exception.localizedMessage)
+        }
+    }
+
+    suspend fun loadContent(context: Context, uri: Uri, completion: (MutableList<Record>) -> Unit) {
+        val json = StringBuilder()
+
+        try {
+            context.contentResolver.openInputStream(uri).use { inputStream ->
+                BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                    var line = reader.readLine()
+
+                    while(line != null) {
+                        json.append(line)
+                        line = reader.readLine()
+                    }
+                }
+            }
+            completion(Record.decodeFromString(json.toString()).toMutableList())
+        } catch (exception: IOException) {
+            Toast.makeText(context, "File could not be found or read.", Toast.LENGTH_SHORT).show()
+            print(exception.localizedMessage)
         }
     }
 }

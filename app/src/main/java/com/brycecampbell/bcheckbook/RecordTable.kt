@@ -29,44 +29,6 @@ import com.brycecampbell.bcheckbook.ui.theme.BCheckbookTheme
 import me.brycecampbell.bcheck.*
 import java.io.*
 
-fun writeContent(context: Context, uri: Uri, content: String) {
-
-    try {
-        context.contentResolver.openFileDescriptor(uri, "w")?.use { parcelFileDescriptor ->
-            FileOutputStream(parcelFileDescriptor.fileDescriptor).use { fileOutputStream ->
-                fileOutputStream.write(content.toByteArray())
-                fileOutputStream.flush()
-            }
-        }
-        Toast.makeText(context, "Data exported Successfully", Toast.LENGTH_SHORT).show()
-    } catch (exception: FileNotFoundException) {
-        print(exception.localizedMessage)
-    } catch (exception: IOException) {
-        print(exception.localizedMessage)
-    }
-}
-
-fun loadContent(context: Context, uri: Uri, completion: (MutableList<Record>) -> Unit) {
-    val json = StringBuilder()
-
-    try {
-        context.contentResolver.openInputStream(uri).use { inputStream ->
-            BufferedReader(InputStreamReader(inputStream)).use { reader ->
-                var line = reader.readLine()
-
-                while(line != null) {
-                    json.append(line)
-                    line = reader.readLine()
-                }
-            }
-        }
-        completion(Record.decodeFromString(json.toString()).toMutableList())
-    } catch (exception: IOException) {
-        Toast.makeText(context, "File could not be found or read.", Toast.LENGTH_SHORT).show()
-        print(exception.localizedMessage)
-    }
-}
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RecordTable(navController: NavHostController? = null, records: MutableList<Record>, manager: DBHelper? = null) {
