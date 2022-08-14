@@ -37,6 +37,7 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
                 }
             }
         }
+
         queryState.value.contains("category:") -> {
             val categoryRegex = "category:\\s(.*)".toRegex()
             val categoryResult = categoryRegex.find(queryState.value)
@@ -75,12 +76,14 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
         else -> records
     }
 
+    var isLoading: Boolean = false
+
     fun addRecord(record: Record) {
         records.add(record)
         manager?.addRecord(record)
     }
 
-    private suspend fun addRecords(givenRecords: MutableList<Record>) {
+    private fun addRecords(givenRecords: MutableList<Record>) {
             manager?.addRecords(givenRecords)
     }
 
@@ -91,7 +94,7 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
         }
     }
 
-    private suspend fun writeContent(context: Context, uri: Uri, content: String): Result<Unit> {
+    private fun writeContent(context: Context, uri: Uri, content: String): Result<Unit> {
         var result: Result<Unit>? = null
 
         runCatching {
@@ -109,7 +112,7 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
         return result!!
     }
 
-    private suspend fun loadContent(context: Context, uri: Uri): Result<List<Record>> {
+    private fun loadContent(context: Context, uri: Uri): Result<List<Record>> {
         val json = StringBuilder()
         var result: Result<List<Record>>? = null
 
@@ -147,6 +150,7 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
     }
 
     fun importRecords(uri: Uri) {
+        isLoading = true
         viewModelScope.launch(Dispatchers.IO) {
             if (manager != null) {
                 val retrievedRecordsResult = loadContent(manager.context, uri)
@@ -155,6 +159,7 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
                     retrievedRecordsResult.onSuccess { retrievedRecords ->
                         addRecords(retrievedRecords.toMutableList())
                         reloadRecords()
+                        isLoading = false
                     }
                 }
             }
