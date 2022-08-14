@@ -78,7 +78,7 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
         else -> records
     }
 
-    val isLoading = remember { mutableStateOf(false) }
+    var isLoading: Boolean = false
 
     fun addRecord(record: Record) {
         records.add(record)
@@ -152,7 +152,7 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
     }
 
     fun importRecords(uri: Uri) {
-        isLoading.value = true
+        isLoading = true
         viewModelScope.launch(Dispatchers.IO) {
             if (manager != null) {
                 val retrievedRecordsResult = loadContent(manager.context, uri)
@@ -161,7 +161,7 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
                     retrievedRecordsResult.onSuccess { retrievedRecords ->
                         addRecords(retrievedRecords.toMutableList())
                         reloadRecords()
-                        isLoading.value = false
+                        isLoading = false
                     }
                 }
             }
