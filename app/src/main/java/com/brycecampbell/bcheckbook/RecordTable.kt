@@ -32,9 +32,7 @@ import me.brycecampbell.bcheck.*
 fun RecordTable(navController: NavHostController? = null, records: MutableList<Record>, manager: DBHelper? = null) {
     val query = remember { mutableStateOf("") }
 
-    val viewModelState = remember { mutableStateOf(RecordTableViewModel(manager, records, query)) }
-
-    val viewModel = viewModelState.value
+    val viewModel = RecordTableViewModel(manager, records, query)
 
     val exportURI = remember { mutableStateOf<Uri?>(null) }
     val importURI = remember { mutableStateOf<Uri?>(null) }
