@@ -118,6 +118,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
 
         if (viewModel.isLoading) {
             CircularProgressIndicator()
+            Text("Loading Data...")
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
                 /*
