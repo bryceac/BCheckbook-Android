@@ -2,6 +2,9 @@ package com.brycecampbell.bcheckbook
 
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import me.brycecampbell.bcheck.Record
 
 class RecordTableViewModel(val manager: DBHelper? = null, var records: MutableList<Record>, val queryState: MutableState<String>): ViewModel() {
@@ -66,5 +69,11 @@ class RecordTableViewModel(val manager: DBHelper? = null, var records: MutableLi
                     record.transaction.vendor.equals(queryState.value, ignoreCase = true)
         }
         else -> records
+    }
+
+    suspend fun addRecords(givenRecords: MutableList<Record>) {
+        viewModelScope.launch(Dispatchers.Default) {
+            manager?.addRecords(givenRecords)
+        }
     }
 }
