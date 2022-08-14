@@ -114,7 +114,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
             }
         })
 
-        if (isLoading.value) {
+        if (viewModel.isLoading.value) {
             CircularProgressIndicator()
             Text("Loading Data...")
         } else {
