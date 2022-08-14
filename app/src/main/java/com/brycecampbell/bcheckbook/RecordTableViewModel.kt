@@ -2,7 +2,6 @@ package com.brycecampbell.bcheckbook
 
 import android.content.Context
 import android.net.Uri
-import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -88,7 +87,9 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
         }
     }
 
-    suspend fun writeContent(context: Context, uri: Uri, content: String) {
+    suspend fun writeContent(context: Context, uri: Uri, content: String): Result<Unit> {
+        var result: Result<Unit>? = null
+
         runCatching {
             context.contentResolver.openFileDescriptor(uri, "w")?.use { parcelFileDescriptor ->
                 FileOutputStream(parcelFileDescriptor.fileDescriptor).use { fileOutputStream ->
@@ -96,11 +97,17 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
                     fileOutputStream.flush()
                 }
             }
+            result = Result.success(Unit)
+        }.onFailure {
+            result = Result.failure(it)
         }
+
+        return result!!
     }
 
     suspend fun loadContent(context: Context, uri: Uri): Result<List<Record>> {
         val json = StringBuilder()
+        var result: Result<List<Record>>? = null
 
         runCatching {
             context.contentResolver.openInputStream(uri).use { inputStream ->
@@ -113,7 +120,11 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
                     }
                 }
             }
-            Record.decodeFromString(json.toString())
+            result = Result.success(Record.decodeFromString(json.toString()))
+        }.onFailure {
+            result = Result.failure(it)
         }
+
+        return result!!
     }
 }
