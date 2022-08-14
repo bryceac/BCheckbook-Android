@@ -3,6 +3,8 @@ package com.brycecampbell.bcheckbook
 import android.content.Context
 import android.net.Uri
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -76,7 +78,7 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
         else -> records
     }
 
-    var isLoading: Boolean = false
+    val isLoading = remember { mutableStateOf(false) }
 
     fun addRecord(record: Record) {
         records.add(record)
@@ -150,7 +152,7 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
     }
 
     fun importRecords(uri: Uri) {
-        isLoading = true
+        isLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             if (manager != null) {
                 val retrievedRecordsResult = loadContent(manager.context, uri)
@@ -159,7 +161,7 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
                     retrievedRecordsResult.onSuccess { retrievedRecords ->
                         addRecords(retrievedRecords.toMutableList())
                         reloadRecords()
-                        isLoading = false
+                        isLoading.value = false
                     }
                 }
             }
