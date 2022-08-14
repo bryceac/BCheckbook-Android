@@ -154,7 +154,5 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
                 }
             }
         }
-
-        reloadRecords()
     }
 }
