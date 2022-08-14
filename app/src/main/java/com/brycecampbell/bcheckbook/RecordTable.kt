@@ -1,6 +1,5 @@
 package com.brycecampbell.bcheckbook
 
-import android.content.Context
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.net.Uri
 import android.widget.Toast
@@ -27,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.brycecampbell.bcheckbook.ui.theme.BCheckbookTheme
 import me.brycecampbell.bcheck.*
-import java.io.*
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -68,8 +66,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
         }, actions = {
             IconButton(onClick = {
                 val record = Record()
-                records.add(record)
-                manager?.addRecord(record)
+                viewModel.addRecord(record)
             }) {
                 Icon(Icons.Filled.Add, "")
             }
