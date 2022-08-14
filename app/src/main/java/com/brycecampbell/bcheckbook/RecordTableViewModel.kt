@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import me.brycecampbell.bcheck.Record
+import me.brycecampbell.bcheck.encodeToJSONString
 import java.io.*
 
 class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableList<Record>, val queryState: MutableState<String>): ViewModel() {
@@ -126,5 +128,17 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
         }
 
         return result!!
+    }
+
+    suspend fun exportRecords(uri: Uri): Result<Unit>? {
+        var results: Result<Unit>? = null
+
+        viewModelScope.launch(Dispatchers.IO) {
+            if (manager != null) {
+                results = writeContent(manager.context, uri, manager.records.encodeToJSONString())
+            }
+        }
+
+        return results
     }
 }
