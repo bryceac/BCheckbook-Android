@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import me.brycecampbell.bcheck.Record
 import me.brycecampbell.bcheck.encodeToJSONString
 import java.io.*
@@ -77,9 +76,7 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
     }
 
     suspend fun addRecords(givenRecords: MutableList<Record>) {
-        viewModelScope.launch(Dispatchers.Default) {
             manager?.addRecords(givenRecords)
-        }
     }
 
     fun reloadRecords() {
@@ -130,7 +127,7 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
         return result!!
     }
 
-    suspend fun exportRecords(uri: Uri): Result<Unit>? {
+    fun exportRecords(uri: Uri): Result<Unit>? {
         var results: Result<Unit>? = null
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -140,5 +137,19 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
         }
 
         return results
+    }
+
+    fun importRecords(uri: Uri) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (manager != null) {
+                val retrievedRecordsResult = loadContent(manager.context, uri)
+
+                retrievedRecordsResult.onSuccess { retrievedRecords ->
+                    addRecords(retrievedRecords.toMutableList())
+                }
+            }
+        }
+
+        reloadRecords()
     }
 }
