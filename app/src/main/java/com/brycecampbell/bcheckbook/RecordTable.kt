@@ -94,69 +94,6 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
 
     val query = remember { mutableStateOf("") }
 
-    val filteredRecords = when {
-            query.value.startsWith("category:") -> {
-                val categoryRegex = "category:\\s(.*)".toRegex()
-                val categoryResult = categoryRegex.find(query.value)
-                val category = if (categoryResult != null) {
-                    categoryResult.groupValues[1]
-                } else {
-                    null
-                }
-
-                if (category.isNullOrEmpty()) {
-                    records
-                } else {
-                    records.filter { record ->
-                        val recordCategory = record.transaction.category
-
-                        when {
-                            category.equals("uncategorized", ignoreCase = true) -> recordCategory.isNullOrEmpty()
-                            !recordCategory.isNullOrEmpty() -> recordCategory.contains(category, ignoreCase = true) ||
-                                    recordCategory.equals(category, ignoreCase = true)
-                            else -> false
-                        }
-                    }
-                }
-            }
-            query.value.contains("category:") -> {
-                val categoryRegex = "category:\\s(.*)".toRegex()
-                val categoryResult = categoryRegex.find(query.value)
-                val category = if (categoryResult != null) {
-                    categoryResult.groupValues[1]
-                } else {
-                    null
-                }
-
-                val vendor = query.value.substringBefore("category").trim()
-
-                val recordsFilteredByCategory = if (category.isNullOrEmpty()) {
-                    records
-                } else {
-                    records.filter { record ->
-                        val recordCategory = record.transaction.category
-
-                        when {
-                            category.equals("uncategorized", ignoreCase = true) -> recordCategory.isNullOrEmpty()
-                            !recordCategory.isNullOrEmpty() -> recordCategory.contains(category, ignoreCase = true) ||
-                                    recordCategory.equals(category, ignoreCase = true)
-                            else -> false
-                        }
-                    }
-                }
-
-                recordsFilteredByCategory.filter { record ->
-                    record.transaction.vendor.contains(vendor, ignoreCase = true) ||
-                            record.transaction.vendor.equals(vendor, ignoreCase = true)
-                }
-            }
-            query.value.isNotEmpty() -> records.filter { record ->
-                record.transaction.vendor.contains(query.value, ignoreCase = true) ||
-                        record.transaction.vendor.equals(query.value, ignoreCase = true)
-            }
-            else -> records
-        }
-
     Column {
         TopAppBar(title = {
             Text("Ledger")
