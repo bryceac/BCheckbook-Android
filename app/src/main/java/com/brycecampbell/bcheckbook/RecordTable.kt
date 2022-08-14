@@ -31,8 +31,9 @@ import me.brycecampbell.bcheck.*
 @Composable
 fun RecordTable(navController: NavHostController? = null, records: MutableList<Record>, manager: DBHelper? = null) {
     val query = remember { mutableStateOf("") }
+    val loading = remember { mutableStateOf(false) }
 
-    val viewModel = RecordTableViewModel(manager, records, query)
+    val viewModel = RecordTableViewModel(manager, records, query, loading)
 
     val exportURI = remember { mutableStateOf<Uri?>(null) }
     val importURI = remember { mutableStateOf<Uri?>(null) }
@@ -174,7 +175,7 @@ fun RecordTable(navController: NavHostController? = null, records: MutableList<R
                 }
             }
 
-            ActivityIndicator(viewModel.isLoading.value)
+            ActivityIndicator(loading.value)
         }
     }
 }

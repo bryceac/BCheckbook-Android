@@ -14,7 +14,7 @@ import me.brycecampbell.bcheck.Record
 import me.brycecampbell.bcheck.encodeToJSONString
 import java.io.*
 
-class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableList<Record>, val queryState: MutableState<String>): ViewModel() {
+class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableList<Record>, val queryState: MutableState<String>, val loadingState: MutableState<Boolean>): ViewModel() {
     val filteredRecords = when {
         queryState.value.startsWith("category:") -> {
             val categoryRegex = "category:\\s(.*)".toRegex()
@@ -78,8 +78,6 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
         }
         else -> records
     }
-
-    val isLoading = mutableStateOf(false)
 
     fun addRecord(record: Record) {
         records.add(record)
@@ -154,7 +152,7 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
 
     fun importRecords(uri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
-            isLoading.value = true
+            loadingState.value = true
             delay(5000)
             if (manager != null) {
                 val retrievedRecordsResult = loadContent(manager.context, uri)
@@ -164,7 +162,7 @@ class RecordTableViewModel(val manager: DBHelper? = null, val records: MutableLi
                         addRecords(retrievedRecords.toMutableList())
                         reloadRecords()
                     }
-                    isLoading.value = false
+                    loadingState.value = false
                 }
             }
         }
