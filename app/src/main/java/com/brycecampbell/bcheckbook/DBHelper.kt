@@ -114,7 +114,6 @@ class DBHelper(val context: Context): SQLiteOpenHelper(context, DATABASE_NAME, n
             contentValues.put("category", category)
 
             db.insert("categories", "category", contentValues)
-            db.close()
         }
     }
 
