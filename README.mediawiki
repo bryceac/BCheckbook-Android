@@ -12,11 +12,7 @@
 
 ==Notes==
 
-This application is currently a <abbr title="work in progress">WIP</abbr>. Although it currently does not have all the capabilities or features 
-of the <a href="https://github.com/bryceac/BCheckbook">original</a>, 
-it has enough to be considered a <abbr title="minimum viable product">MVP</abbr>, and is nearing a point where it can be released into the wild.
-
-This application was written against Android API level 32, with a current minimum target of Android 11.
+This application was written against Android API level 32, with a current minimum target of Android 11, as it was unable to run on Android 10 or earlier.
 
 ===Questions===
 
@@ -49,6 +45,17 @@ Unlike many other file formats, this is safe to do because bcheck files are esse
 </ol>
 
 For any further questions, check out the original project.
+
+===Support===
+
+As I have switched from Android to iOS and 
+have no Android device capable of running this application, 
+I am kind of limited in what I can do to give support, 
+but I will try my best to help as much as possible.
+
+If you would need some help, contact me at the address below:
+
+android@brycecampbell.me
 
 ===Contributing===
 
