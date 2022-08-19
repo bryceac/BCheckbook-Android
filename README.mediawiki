@@ -46,6 +46,10 @@ Unlike many other file formats, this is safe to do because bcheck files are esse
 
 For any further questions, check out the original project.
 
+===Usage===
+
+This application is simple enough to figure out
+
 ===Support===
 
 As I have switched from Android to iOS and 
