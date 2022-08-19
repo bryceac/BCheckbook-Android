@@ -44,11 +44,27 @@ Unlike many other file formats, this is safe to do because bcheck files are esse
 </li>
 </ol>
 
-For any further questions, check out the original project.
+For any further questions, check out the <a href="https://github.com/bryceac/BCheckbook">original project</a>.
 
 ===Usage===
 
-This application is simple enough to figure out
+This application is simple enough to figure out, 
+but there is an annoyance this port has that the iOS version does not,
+which is a lack of a date picker.
+
+I intend to get it added in as soon as I can, but until then, 
+the date must be specifoed in <strong>YYYY-MM-DD</strong> format 
+if you decide to modify it in the editor. 
+This was done because that is what 
+the underlying model expects and if it does not match that format, 
+the date will not be modified.
+
+Everything else should not pose much of an issue.
+
+====Searching====
+
+Searching works much the same as the original application, 
+so go check the <a href="https://github.com/bryceac/BCheckbook/blob/main/README.mediawiki#Searching_Records">details</a> found there
 
 ===Support===
 
