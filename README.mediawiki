@@ -33,7 +33,7 @@ as it is now.</p>
 <dl>
 <dt style="font-weight:bold">I am planning to switch to Android. Can I import my data from the iOS or macOS apps?</dt>
 <dd>
-<p>Yes, you definitely can. This app makes use of a library, which I included with the project, I made with the full intention 
+<p>Yes, you definitely can. This app makes use of a library I made, which I included with the project, with the full intention 
 of making it so that Java and Kotlin programmers can read and write the saves from those files.</p>
 <p>However, this app, in its current state, will not recognize your files 
 because it is not setup to recognize the extension I used for the iOS and macOS apps.</p>
