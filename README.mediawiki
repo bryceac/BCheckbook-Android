@@ -61,6 +61,11 @@ the date will not be modified.
 
 Everything else should not pose much of an issue.
 
+====Removing Transactions====
+
+Transactions can be removed/delete 
+by swiping the item from right to left on the ledger screen.
+
 ====Searching====
 
 Searching works much the same as the original application, 
