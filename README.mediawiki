@@ -14,12 +14,22 @@
 
 This application was written against Android API level 32, with a current minimum target of Android 11, as it was unable to run on Android 10 or earlier.
 
+===Version History===
+
+<dl>
+<dt style="font-weight:bold">0.1</dt>
+<dd>
+<p>Initial Release</p>
+<p>Released August 2022</p>
+</dd>
+</dl>
+
 ===Questions===
 
 <ol>
 <li>
 <dl>
-<dt style="font-weight:bold">The iOS and macOS apps support QIF. Will this application also support QIF?</dt>
+<dt style="font-weight:bold">The iOS and macOS apps support QIF. Does this application also support QIF?</dt>
 <dd>
 <p>At present, this is one of the features missing from this app.</p>
 <p>Since I have been away from Android programming for many years 
@@ -53,7 +63,7 @@ but there is an annoyance this port has that the iOS version does not,
 which is a lack of a date picker.
 
 I intend to get it added in as soon as I can, but until then, 
-the date must be specifoed in <strong>YYYY-MM-DD</strong> format 
+the date must be specified in <strong>YYYY-MM-DD</strong> format 
 if you decide to modify it in the editor. 
 This was done because that is what 
 the underlying model expects and if it does not match that format, 
@@ -63,13 +73,27 @@ Everything else should not pose much of an issue.
 
 ====Removing Transactions====
 
-Transactions can be removed/delete 
+Transactions can be removed/deleted 
 by swiping the item from right to left on the ledger screen.
 
 ====Searching====
 
 Searching works much the same as the original application, 
-so go check the <a href="https://github.com/bryceac/BCheckbook/blob/main/README.mediawiki#Searching_Records">details</a> found there
+so go check the <a href="https://github.com/bryceac/BCheckbook/blob/main/README.mediawiki#Searching_Records">details</a> found there.
+
+=====Exporting Data====
+
+When exporting data, 
+it is recommended that you choose a publicly accessible directory, 
+such as the Downloads or Documents folder, 
+as that will allow you access to the data for use in other applications.
+
+====Importing Data====
+
+Like with exporting, it is recommended 
+that you make sure your file is in a publicly accessible location, 
+but the app <strong>should</strong> 
+be able to select the file from any directory on your phone or device.
 
 ===Support===
 
@@ -78,13 +102,15 @@ have no Android device capable of running this application,
 I am kind of limited in what I can do to give support, 
 but I will try my best to help as much as possible.
 
-If you would need some help, contact me at the address below:
+If you need some help, contact me at the address below:
 
 android@brycecampbell.me
 
 ===Contributing===
 
 If you are familiar with Android programming and Jetpack Compose, feel free to fork this repo and issue a pull request.
+
+Code submitted will be tested by me before it becomes part of a release.
 
 The main things I need to deal with are as follows:
 
@@ -95,5 +121,13 @@ The main things I need to deal with are as follows:
 <strong>bcheck</strong>, so that Mac users do not need to worry about extensions.</p>
 <p>This might be as simple as just making the input and output mime types be that of the one used for plain text, 
 but I strongly doubt it.</p>
+</dd>
+<dt style="font-weight:bold">Subsitute Date Picker for Text Field</dt>
+<dd>
+<p>This is something I have been investigating since I made the port, 
+but has been giving me grief, 
+especially because I have no idea if I library I found works 
+with the version of Jetpack Compose I am using.</p>
+<p>If you can get a date picker to work, I would greatly appreciate the help.</p>
 </dd>
 </dl>
