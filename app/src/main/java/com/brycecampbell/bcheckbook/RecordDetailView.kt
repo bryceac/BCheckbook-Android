@@ -27,7 +27,8 @@ import java.text.NumberFormat
 fun RecordDetailView(navController: NavHostController? = null, records: MutableList<Record>, categories: MutableList<String>, recordIndex: Int, manager: DBHelper? = null) {
     val currencyFormatter = NumberFormat.getCurrencyInstance()
     val recordState = remember { mutableStateOf(records[recordIndex]) }
-    val recordDateString = remember { mutableStateOf(recordState.value.transaction.date.toString()) }
+    // val recordDateString = remember { mutableStateOf(recordState.value.transaction.date.toString()) }
+    val recordDate = remember { mutableStateOf(recordState.value.transaction.date) }
     val recordCheckNumberString = remember { mutableStateOf(if (recordState.value.transaction.checkNumber != null) recordState.value.transaction.checkNumber.toString() else "") }
     val recordVendor = remember { mutableStateOf(recordState.value.transaction.vendor) }
     val recordMemo = remember { mutableStateOf(recordState.value.transaction.memo) }
@@ -48,9 +49,11 @@ fun RecordDetailView(navController: NavHostController? = null, records: MutableL
         })
 
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            TextField(recordDateString.value, onValueChange = {
+            /* TextField(recordDateString.value, onValueChange = {
                 recordDateString.value = it
-            }, modifier = Modifier.fillMaxWidth())
+            }, modifier = Modifier.fillMaxWidth()) */
+
+            DatePicker(recordDate)
 
 
             TextField(recordCheckNumberString.value, onValueChange = {
@@ -93,7 +96,8 @@ fun RecordDetailView(navController: NavHostController? = null, records: MutableL
             }
 
             Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                val newDate = runCatching { LocalDate.parse(recordDateString.value) }.getOrNull()
+                // val newDate = runCatching { LocalDate.parse(recordDateString.value) }.getOrNull()
+                val newDate = recordDate.value
                 val newCheckNumber = recordCheckNumberString.value.toIntOrNull()
                 val newAmount = {
                     val dollarInput = runCatching { currencyFormatter.parse(recordAmountString.value) }.getOrNull()
@@ -113,9 +117,11 @@ fun RecordDetailView(navController: NavHostController? = null, records: MutableL
                 val newCategory = recordCategory.value
                 val newReconciledStatus = recordReconciledState.value
 
-                if (newDate != null) {
+                /* if (newDate != null) {
                     recordState.value.transaction.date = newDate
-                }
+                } */
+
+                recordState.value.transaction.date = newDate
 
                 recordState.value.transaction.checkNumber = newCheckNumber
                 recordState.value.transaction.vendor = recordVendor.value
