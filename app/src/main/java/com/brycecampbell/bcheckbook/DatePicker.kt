@@ -26,6 +26,7 @@ fun DatePicker(selectedDate: MutableState<LocalDate>) {
     val expanded = remember { mutableStateOf(false) }
     val datePicker = DatePickerDialog(context, { _: DatePicker, year: Int, month: Int, day: Int ->
         selectedDate.value = LocalDate(year, month, day)
+        expanded.value = false
     }, selectedDate.value.year, selectedDate.value.monthNumber-1, selectedDate.value.dayOfMonth)
 
     ExposedDropdownMenuBox(expanded.value, onExpandedChange = {
