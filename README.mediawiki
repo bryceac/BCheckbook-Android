@@ -20,11 +20,12 @@ This application was written against Android API level 32, with a current minimu
 <dt style="font-weight:bold">0.1.1</dt>
 <dd>
 <p>switch date field to a date picker.</p>
+<p>Released August 24, 2022 15:48 PST</p>
 </dd>
 <dt style="font-weight:bold">0.1</dt>
 <dd>
 <p>Initial Release</p>
-<p>Released August 2022</p>
+<p>Released August 24, 2022</p>
 </dd>
 </dl>
 
