@@ -32,7 +32,7 @@ fun DatePicker(selectedDate: MutableState<LocalDate>) {
             expanded.value = !expanded.value
     }, modifier = Modifier.fillMaxWidth()) {
         OutlinedTextField(selectedDate.value.toString(), onValueChange = {}, label = {
-            Text("date")
+            Text("Date")
         }, modifier = Modifier.fillMaxWidth().clickable {
             expanded.value != expanded.value
         }, trailingIcon = {
