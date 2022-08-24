@@ -31,7 +31,7 @@ fun DatePicker(selectedDate: MutableState<LocalDate>) {
     ExposedDropdownMenuBox(expanded.value, onExpandedChange = {
             expanded.value = !expanded.value
     }, modifier = Modifier.fillMaxWidth()) {
-        OutlinedTextField(selectedDate.toString(), onValueChange = {}, label = {
+        OutlinedTextField(selectedDate.value.toString(), onValueChange = {}, label = {
             Text("date")
         }, modifier = Modifier.fillMaxWidth().clickable {
             expanded.value != expanded.value
