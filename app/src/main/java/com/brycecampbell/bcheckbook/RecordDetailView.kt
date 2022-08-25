@@ -96,7 +96,6 @@ fun RecordDetailView(navController: NavHostController? = null, records: MutableL
             }
 
             Button(modifier = Modifier.fillMaxWidth(), onClick = {
-                // val newDate = runCatching { LocalDate.parse(recordDateString.value) }.getOrNull()
                 val newDate = recordDate.value
                 val newCheckNumber = recordCheckNumberString.value.toIntOrNull()
                 val newAmount = {
@@ -116,10 +115,6 @@ fun RecordDetailView(navController: NavHostController? = null, records: MutableL
                 val newType = selectedType.value
                 val newCategory = recordCategory.value
                 val newReconciledStatus = recordReconciledState.value
-
-                /* if (newDate != null) {
-                    recordState.value.transaction.date = newDate
-                } */
 
                 recordState.value.transaction.date = newDate
 
