@@ -25,7 +25,7 @@ fun DatePicker(selectedDate: MutableState<LocalDate>) {
     val context = LocalContext.current
     val expanded = remember { mutableStateOf(false) }
     val datePicker = DatePickerDialog(context, { _: DatePicker, year: Int, month: Int, day: Int ->
-        selectedDate.value = LocalDate(year, month, day)
+        selectedDate.value = LocalDate(year, month+1, day)
         expanded.value = false
     }, selectedDate.value.year, selectedDate.value.monthNumber-1, selectedDate.value.dayOfMonth)
 
