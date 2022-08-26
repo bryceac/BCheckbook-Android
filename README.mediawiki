@@ -21,6 +21,7 @@ This application was written against Android API level 32, with a current minimu
 <dd>
 <p>Bug fix</p>
 <p>fix bug with date picker.</p>
+<p>Released August 25, 2022</p>
 </dd>
 <dt style="font-weight:bold">0.1.1</dt>
 <dd>
